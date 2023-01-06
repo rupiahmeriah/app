@@ -6,6 +6,8 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 
 import "../styles/globals.css";
 
+import NavBar from "./components/Navbar";
+
 function MyApp({
   Component,
   pageProps,
@@ -19,6 +21,7 @@ function MyApp({
       supabaseClient={supabase}
       initialSession={pageProps.initialSession}
     >
+      <NavBar />
       <Component {...pageProps} />
     </SessionContextProvider>
   );
