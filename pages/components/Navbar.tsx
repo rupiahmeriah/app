@@ -6,11 +6,12 @@ import {
   XMarkIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Finances", href: "#", current: false },
-  { name: "Setup", href: "#", current: false },
+  { name: "Home", href: "/", current: true },
+  { name: "Finances", href: "/", current: false },
+  { name: "Setup", href: "/setup", current: false },
 ];
 
 function classNames(...classes: any) {
@@ -51,7 +52,7 @@ export default function Example() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
+                      <Link
                         key={item.name}
                         href={item.href}
                         className={classNames(
@@ -63,7 +64,7 @@ export default function Example() {
                         aria-current={item.current ? "page" : undefined}
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 </div>
