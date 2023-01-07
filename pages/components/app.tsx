@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { BanknotesIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-
 import { Session } from "@supabase/auth-helpers-react";
 
 import AccountsOverview from "./AccountsOverview";
