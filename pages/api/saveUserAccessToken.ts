@@ -32,43 +32,43 @@ export default async function handler(
   let jsonBody = body;
   jsonBody = jsonBody.map((item: any) => {
     return {
+      id: `${item.userId}-${item.bankId}`,
       user_id: item.userId,
       bank_id: item.bankId,
       access_token: item.accessToken,
     };
   });
 
-  console.log("JSON boderino", jsonBody);
-
-  const { data, error } = await supabase.from("user_banks").insert(jsonBody);
+  const { data, error } = await supabase.from("user_banks").upsert(jsonBody);
 
   if (error) {
     console.log(error);
     res.status(500).send("Error");
   }
 
-  console.log("data:", JSON.stringify(data, null, 4));
-
-  const upstashFetchOptions = {
+  const upstashFetchOptions: RequestInit = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${UPSTASH_TOKEN}`,
+      Authorization: `Bearer ${process.env.UPSTASH_TOKEN}`,
       "Upstash-Forward-Content-Type": "application/json",
-      "Upstash-Forward-Authorization": `Bearer ${NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+      "Upstash-Forward-Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
     },
-    body: {
-      user_id: jsonBody[0].userId,
-    },
+    body: JSON.stringify({
+      user_id: jsonBody[0].user_id,
+    }),
   };
 
-  fetch(
-    "https://qstash.upstash.io/v1/publish/https://118c-45-8-25-64.ap.ngrok.io/functions/v1/populateBankConnection",
-    upstashFetchOptions
-  )
-    .then((response) => response.json())
-    .then((response) => console.log(response))
-    .catch((err) => console.error(err));
+  try {
+    const upstasResponse = await fetch(
+      "https://qstash.upstash.io/v1/publish/https://118c-45-8-25-64.ap.ngrok.io/functions/v1/populateBankConnection",
+      upstashFetchOptions
+    );
+    const upstashResponseJson = await upstasResponse.json();
+    console.log(upstashResponseJson);
+  } catch (error) {
+    console.log(error);
+  }
 
   res.status(200).send(process.env.NEXT_PUBLIC_APP_URL || "");
 }
