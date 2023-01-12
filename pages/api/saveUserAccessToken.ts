@@ -23,7 +23,7 @@ export default async function handler(
     res.status(500).send("Error");
   }
 
-  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL || "";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || "";
 
   const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
@@ -52,7 +52,7 @@ export default async function handler(
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.UPSTASH_TOKEN}`,
       "Upstash-Forward-Content-Type": "application/json",
-      "Upstash-Forward-Authorization": `Bearer ${process.env.PUBLIC_SUPABASE_ANON_KEY}`,
+      "Upstash-Forward-Authorization": `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
     },
     body: JSON.stringify({
       user_id: jsonBody[0].user_id,
@@ -70,5 +70,5 @@ export default async function handler(
     console.log(error);
   }
 
-  res.status(200).send(process.env.PUBLIC_APP_URL || "");
+  res.status(200).send(process.env.URL || "");
 }

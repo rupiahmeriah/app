@@ -33,7 +33,7 @@ export default function SetupPage({ session }: { session: Session }) {
   async function setupAndRedirectToBrickWidget() {
     const publicToken = await getPublicToken();
     window.location.assign(
-      `https://cdn.onebrick.io/sandbox-widget/v1/?accessToken=${publicToken}&region=id&user_id=${user?.id}&redirect_url=${process.env.PUBLIC_APP_URL}/api/saveUserAccessToken`
+      `https://cdn.onebrick.io/sandbox-widget/v1/?accessToken=${publicToken}&region=id&user_id=${user?.id}&redirect_url=${process.env.URL}/api/saveUserAccessToken`
     );
   }
 

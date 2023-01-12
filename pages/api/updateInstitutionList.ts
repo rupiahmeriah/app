@@ -37,7 +37,7 @@ export default async function handler(
     });
   }
 
-  const supabaseUrl = process.env.PUBLIC_SUPABASE_URL || "";
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY || "";
 
   const username = process.env.BRICK_USERNAME || "usernameEnvNotSet";
