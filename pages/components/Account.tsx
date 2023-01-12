@@ -86,7 +86,7 @@ export default function Account({ session }: { session: Session }) {
         <input
           id="email"
           type="text"
-          value={session.user?.email ?? ""}
+          value={session?.user?.email ?? ""}
           disabled
         />
       </div>
