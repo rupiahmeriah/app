@@ -146,7 +146,7 @@ export default function Example() {
                         <span className="font-medium text-slate-900">
                           {transaction.amount}
                         </span>
-                        {transaction.currency}
+                        {/* {transaction.currency} */}
                       </td>
                       <td className="hidden whitespace-nowrap px-6 py-4 text-sm text-slate-500 md:block">
                         <span

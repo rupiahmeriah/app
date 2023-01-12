@@ -9,6 +9,50 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      institutions: {
+        Row: {
+          automatic_verification: boolean | null
+          bank_code: string | null
+          country_code: string | null
+          country_name: string | null
+          created_at: string | null
+          id: number
+          institution_type: string | null
+          logo: string | null
+          name: string | null
+          passbook_verification: boolean | null
+          pdf_verification: boolean | null
+          primary_color: string | null
+        }
+        Insert: {
+          automatic_verification?: boolean | null
+          bank_code?: string | null
+          country_code?: string | null
+          country_name?: string | null
+          created_at?: string | null
+          id?: number
+          institution_type?: string | null
+          logo?: string | null
+          name?: string | null
+          passbook_verification?: boolean | null
+          pdf_verification?: boolean | null
+          primary_color?: string | null
+        }
+        Update: {
+          automatic_verification?: boolean | null
+          bank_code?: string | null
+          country_code?: string | null
+          country_name?: string | null
+          created_at?: string | null
+          id?: number
+          institution_type?: string | null
+          logo?: string | null
+          name?: string | null
+          passbook_verification?: boolean | null
+          pdf_verification?: boolean | null
+          primary_color?: string | null
+        }
+      }
       profiles: {
         Row: {
           avatar_url: string | null
