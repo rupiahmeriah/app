@@ -1,15 +1,5 @@
-type UserBankDetailType = {
-  balances_available: number;
-  balances_current: number;
-  user_id: string;
-  account_id: string;
-  account_holder: string;
-  id: string;
-  account_number: string;
-  institutions: {
-    name: string;
-  };
-};
+import { UserBankDetailType } from "../../types/highLevelTypes";
+import { toRupiah } from "../../utils/toRupiah";
 
 export default function AccountsOverview({
   userBanks,
@@ -38,7 +28,7 @@ export default function AccountsOverview({
                     </dt>
                     <dd>
                       <div className="text-lg font-medium text-gray-900">
-                        {userBank.balances_current}
+                        {toRupiah(userBank.balances_current)}
                       </div>
                     </dd>
                   </dl>
@@ -51,7 +41,7 @@ export default function AccountsOverview({
                   href={userBank.account_holder}
                   className="font-medium text-cyan-700 hover:text-cyan-900"
                 >
-                  View all
+                  View details
                 </a>
               </div>
             </div>

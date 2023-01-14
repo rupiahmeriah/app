@@ -1,9 +1,12 @@
 import { Session } from "@supabase/auth-helpers-react";
 
+import { useSessionContext } from "@supabase/auth-helpers-react";
+
 import AccountsOverview from "./AccountsOverview";
 import Institutions from "./Institutions";
 import MonthlySummary from "./MonthlySummary";
 import MonthlySpendingHabits from "./MonthlySpendingHabits";
+import { Database } from "../../types/supabase";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
@@ -18,6 +21,8 @@ export default function Example({
   userBanks: any;
   transactions: any;
 }) {
+  const supabaseSession = useSessionContext();
+
   return (
     <>
       <div className="min-h-full">
@@ -33,7 +38,7 @@ export default function Example({
                       <div>
                         <div className="flex items-center">
                           <h1 className="ml-3 text-4xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                            Welcome Egan!
+                            Welcome {supabaseSession.session?.user.email}!
                           </h1>
                         </div>
                       </div>

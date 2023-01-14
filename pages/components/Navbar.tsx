@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useReducer } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -6,22 +6,24 @@ import {
   XMarkIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../types/supabase";
+import { classNames } from "../../utils/classNames";
 
-const navigation = [
-  { name: "Home", href: "/", current: true },
-  { name: "Finances", href: "/", current: false },
-  { name: "Setup", href: "/setup", current: false },
-];
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+const generateNavItem = (name: string, href: string, pathName: string) => {
+  return { name, href, current: pathName == href };
+};
 
 export default function Example() {
+  const pathName = usePathname() || "";
   const supabaseClient = useSupabaseClient<Database>();
+
+  const navigation = [
+    generateNavItem("Home", "/", pathName),
+    generateNavItem("Setup", "/setup", pathName),
+  ];
 
   return (
     <Disclosure as="nav" className="bg-slate-100">
@@ -118,15 +120,15 @@ export default function Example() {
                       </Menu.Item>
                       <Menu.Item>
                         {({ active }) => (
-                          <a
-                            href="#"
+                          <Link
+                            href="/settings"
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
                           >
                             Settings
-                          </a>
+                          </Link>
                         )}
                       </Menu.Item>
                       <Menu.Item>
