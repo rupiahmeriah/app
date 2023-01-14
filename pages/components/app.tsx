@@ -9,7 +9,15 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Example({ session }: { session: Session }) {
+export default function Example({
+  session,
+  userBanks,
+  transactions,
+}: {
+  session: Session;
+  userBanks: any;
+  transactions: any;
+}) {
   return (
     <>
       <div className="min-h-full">
@@ -37,13 +45,13 @@ export default function Example({ session }: { session: Session }) {
 
             <div className="mt-8 grid grid-cols-2">
               <div className="grid grid-cols-1 grid-rows-3">
-                <AccountsOverview />
+                <AccountsOverview userBanks={userBanks} />
                 <MonthlySummary />
-                <Institutions />
+                {/* <Institutions /> */}
               </div>
 
               <div>
-                <MonthlySpendingHabits />
+                <MonthlySpendingHabits transactions={transactions} />
               </div>
             </div>
           </main>

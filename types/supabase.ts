@@ -86,6 +86,7 @@ export interface Database {
           account_number: string | null
           balances_available: number
           balances_current: number
+          bank_id: number | null
           created_at: string | null
           id: string
           user_id: string
@@ -96,6 +97,7 @@ export interface Database {
           account_number?: string | null
           balances_available: number
           balances_current: number
+          bank_id?: number | null
           created_at?: string | null
           id: string
           user_id: string
@@ -106,6 +108,30 @@ export interface Database {
           account_number?: string | null
           balances_available?: number
           balances_current?: number
+          bank_id?: number | null
+          created_at?: string | null
+          id?: string
+          user_id?: string
+        }
+      }
+      user_bank_tokens: {
+        Row: {
+          access_token: string
+          bank_id: number
+          created_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          access_token: string
+          bank_id: number
+          created_at?: string | null
+          id: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string
+          bank_id?: number
           created_at?: string | null
           id?: string
           user_id?: string
@@ -147,32 +173,6 @@ export interface Database {
           reference_id?: string | null
           status?: string
           user_bank_id?: string
-        }
-      }
-      user_banks: {
-        Row: {
-          access_token: string
-          bank_id: number
-          bank_name: string | null
-          created_at: string | null
-          id: string
-          user_id: string
-        }
-        Insert: {
-          access_token: string
-          bank_id: number
-          bank_name?: string | null
-          created_at?: string | null
-          id: string
-          user_id: string
-        }
-        Update: {
-          access_token?: string
-          bank_id?: number
-          bank_name?: string | null
-          created_at?: string | null
-          id?: string
-          user_id?: string
         }
       }
     }

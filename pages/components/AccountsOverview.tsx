@@ -1,21 +1,21 @@
-import { ScaleIcon } from "@heroicons/react/24/outline";
+type UserBankDetailType = {
+  balances_available: number;
+  balances_current: number;
+  user_id: string;
+  account_id: string;
+  account_holder: string;
+  id: string;
+  account_number: string;
+  institutions: {
+    name: string;
+  };
+};
 
-const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Finances", href: "#", current: false },
-  { name: "Setup", href: "#", current: false },
-];
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
-const cards = [
-  { name: "Account balance", href: "#", icon: ScaleIcon, amount: "$30,659.45" },
-  // More items...
-];
-
-export default function Example() {
+export default function AccountsOverview({
+  userBanks,
+}: {
+  userBanks: UserBankDetailType[];
+}) {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
       <h2 className="text-lg font-medium leading-6 text-gray-900">
@@ -23,27 +23,22 @@ export default function Example() {
       </h2>
       <div className="mt-2">
         {/* Card */}
-        {cards.map((card) => (
+        {userBanks?.map((userBank) => (
           <div
-            key={card.name}
+            key={userBank.institutions.name}
             className="overflow-hidden rounded-lg bg-white shadow"
           >
             <div className="p-5">
               <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <card.icon
-                    className="h-6 w-6 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </div>
+                <div className="flex-shrink-0">{}</div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
                     <dt className="truncate text-sm font-medium text-gray-500">
-                      {card.name}
+                      {userBank.institutions.name}
                     </dt>
                     <dd>
                       <div className="text-lg font-medium text-gray-900">
-                        {card.amount}
+                        {userBank.balances_current}
                       </div>
                     </dd>
                   </dl>
@@ -53,7 +48,7 @@ export default function Example() {
             <div className="bg-gray-50 px-5 py-3">
               <div className="text-sm">
                 <a
-                  href={card.href}
+                  href={userBank.account_holder}
                   className="font-medium text-cyan-700 hover:text-cyan-900"
                 >
                   View all

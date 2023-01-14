@@ -4,19 +4,7 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-const transactions = [
-  {
-    id: 1,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "Rp20,000",
-    status: "success",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
-  },
-];
-
-export default function Example() {
+export default function Example({ transactions }: any) {
   return (
     <>
       <h2 className="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-slate-900 sm:px-6 lg:px-8">
@@ -34,10 +22,10 @@ export default function Example() {
           role="list"
           className="mt-2 divide-y divide-slate-200 overflow-hidden shadow sm:hidden"
         >
-          {transactions.map((transaction) => (
+          {transactions?.slice(0, 10).map((transaction: any) => (
             <li key={transaction.id}>
               <a
-                href={transaction.href}
+                href={transaction.direction}
                 className="block bg-white px-4 py-4 hover:bg-slate-50"
               >
                 <span className="flex items-center space-x-4">
@@ -47,7 +35,9 @@ export default function Example() {
                       aria-hidden="true"
                     />
                     <span className="flex flex-col truncate text-sm text-slate-500">
-                      <span className="truncate">{transaction.name}</span>
+                      <span className="truncate">
+                        {transaction.description}
+                      </span>
                       <span>
                         <span className="font-medium text-slate-900">
                           {transaction.amount}
@@ -113,7 +103,7 @@ export default function Example() {
                       className="hidden bg-slate-50 px-6 py-3 text-left text-sm font-semibold text-slate-900 md:block"
                       scope="col"
                     >
-                      Status
+                      Direction
                     </th>
                     <th
                       className="bg-slate-50 px-6 py-3 text-right text-sm font-semibold text-slate-900"
@@ -124,7 +114,7 @@ export default function Example() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 bg-white">
-                  {transactions.map((transaction) => (
+                  {transactions.slice(0, 10).map((transaction: any) => (
                     <tr key={transaction.id} className="bg-white">
                       <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-slate-900">
                         <div className="flex">
@@ -137,7 +127,7 @@ export default function Example() {
                               aria-hidden="true"
                             />
                             <p className="truncate text-slate-500 group-hover:text-slate-900">
-                              {transaction.name}
+                              {transaction.description}
                             </p>
                           </a>
                         </div>
@@ -155,11 +145,11 @@ export default function Example() {
                             "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize"
                           )}
                         >
-                          {transaction.status}
+                          {transaction.direction}
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-slate-500">
-                        <time dateTime={transaction.datetime}>
+                        <time dateTime={transaction.date}>
                           {transaction.date}
                         </time>
                       </td>

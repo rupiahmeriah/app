@@ -39,7 +39,9 @@ export default async function handler(
     };
   });
 
-  const { data, error } = await supabase.from("user_banks").upsert(jsonBody);
+  const { data, error } = await supabase
+    .from("user_bank_tokens")
+    .upsert(jsonBody);
 
   if (error) {
     console.log(error);

@@ -7,6 +7,8 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../types/supabase";
 
 const navigation = [
   { name: "Home", href: "/", current: true },
@@ -19,6 +21,8 @@ function classNames(...classes: any) {
 }
 
 export default function Example() {
+  const supabaseClient = useSupabaseClient<Database>();
+
   return (
     <Disclosure as="nav" className="bg-slate-100">
       {({ open }) => (
@@ -133,6 +137,12 @@ export default function Example() {
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"
                             )}
+                            onClick={async () => {
+                              const { error } =
+                                await supabaseClient.auth.signOut();
+
+                              console.log("sign out error", error);
+                            }}
                           >
                             Sign out
                           </a>
