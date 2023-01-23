@@ -10,13 +10,17 @@ const Login = ({ userBanks, transactions }: any) => {
   const supabase = useSupabaseClient();
 
   return (
-    <div className="container" style={{ padding: "50px 0 100px 0" }}>
+    <div className="py-10">
       {!session ? (
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-        />
+        <div className="mx-auto max-w-2xl sm:px-6 lg:px-8">
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            theme="light"
+            providers={["google", "twitter"]}
+            // redirectTo="https://localhost:3001"
+          />
+        </div>
       ) : (
         <App
           session={session}
@@ -53,5 +57,31 @@ export async function getServerSideProps() {
     },
   };
 }
+
+// export const handleAuthProvider = async (ctx: GetServerSidePropsContext) => {
+//   // Check if we have a session
+//   const {
+//     data: { session },
+//   } = await supabase.auth.getSession();
+
+//   if (!session) {
+//     return null;
+//   }
+
+//   // Retrieve provider_token & logged in user's third-party id from metadata
+//   const { provider_token, user } = session
+//   const userId = user.user_metadata.user_name
+
+//   const allRepos = await (
+//     await fetch(`https://api.github.com/search/repositories?q=user:${userId}`, {
+//       method: 'GET',
+//       headers: {
+//         Authorization: `token ${provider_token}`,
+//       },
+//     })
+//   ).json()
+
+//   return { props: { user, allRepos } }
+// }
 
 export default Login;

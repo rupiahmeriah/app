@@ -1,4 +1,5 @@
-import { ScaleIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, ScaleIcon } from "@heroicons/react/24/outline";
+import { toRupiah } from "../../utils/toRupiah";
 
 const navigation = [
   { name: "Home", href: "#", current: true },
@@ -10,59 +11,59 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-const cards = [
-  { name: "Account balance", href: "#", icon: ScaleIcon, amount: "$30,659.45" },
-  // More items...
-];
-
 export default function Example() {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
-      <h2 className="text-lg font-medium leading-6 text-gray-900">
-        This Month's Summary
-      </h2>
+    <div className="mx-auto max-w-6xl py-4 px-4 sm:px-6 lg:px-8 w-full">
       <div className="mt-2">
-        {/* Card */}
-        {cards.map((card) => (
-          <div
-            key={card.name}
-            className="overflow-hidden rounded-lg bg-white shadow"
-          >
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <card.icon
-                    className="h-6 w-6 text-gray-400"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="truncate text-sm font-medium text-gray-500">
-                      {card.name}
-                    </dt>
-                    <dd>
-                      <div className="text-lg font-medium text-gray-900">
-                        {card.amount}
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-50 px-5 py-3">
-              <div className="text-sm">
-                <a
-                  href={card.href}
-                  className="font-medium text-cyan-700 hover:text-cyan-900"
-                >
-                  View all
-                </a>
-              </div>
-            </div>
-          </div>
-        ))}
+        <div className="overflow-hidden rounded-lg bg-white shadow">
+          <h2 className="text-lg font-medium leading-6 text-slate-600">
+            This Month's Summary
+          </h2>
+          <Card title="Total Budgeted" value={5450333} />
+          <Card title="Current Budget" value={3450333} />
+          {/* tailwind insert line divider */}
+
+          <Divider />
+
+          <Card title="Income" value={1000000} />
+          <Card title="Expenses" value={-135000} />
+
+          <Divider />
+
+          <Card title="Net income" value={4300234} />
+        </div>
       </div>
     </div>
   );
 }
+
+const Card = ({ title, value }: { title: string; value: number }) => {
+  return (
+    <div className="p-5">
+      <div className="items-center">
+        <dl className="flex justify-between">
+          <dt className="truncate text-md font-medium text-gray-500">
+            <a href="#" className="text-cyan-600">
+              {title}
+            </a>
+          </dt>
+          <dd>
+            <div className="text-md font-medium text-gray-900">
+              {toRupiah(value)}
+            </div>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  );
+};
+
+const Divider = () => {
+  return (
+    <div className="relative">
+      <div className="absolute inset-0 flex items-center" aria-hidden="true">
+        <div className="w-full border-t border-gray-200 mx-4" />
+      </div>
+    </div>
+  );
+};

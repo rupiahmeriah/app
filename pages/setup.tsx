@@ -48,9 +48,9 @@ export default function SetupPage({
 
   async function setupAndRedirectToBrickWidget() {
     const publicToken = await getPublicToken();
-    window.location.assign(
-      `https://cdn.onebrick.io/sandbox-widget/v1/?accessToken=${publicToken}&region=id&user_id=${user?.id}&redirect_url=${process.env.URL}/api/saveUserAccessToken`
-    );
+    const redirectUrl = process.env.URL || process.env.NEXT_PUBLIC_URL;
+    const finalUrl = `https://cdn.onebrick.io/sandbox-widget/v1/?accessToken=${publicToken}&region=id&user_id=${user?.id}&redirect_url=${redirectUrl}/api/saveUserAccessToken`;
+    window.location.assign(finalUrl);
   }
 
   return (
@@ -81,7 +81,7 @@ export default function SetupPage({
                     <div>
                       <button
                         type="button"
-                        className="mt-4 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                        className="mt-4 inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                         onClick={setupAndRedirectToBrickWidget}
                       >
                         Sync your bank accounts

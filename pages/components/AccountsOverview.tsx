@@ -7,11 +7,12 @@ export default function AccountsOverview({
   userBanks: UserBankDetailType[];
 }) {
   return (
-    <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">
-      <h2 className="text-lg font-medium leading-6 text-gray-900">
-        Accounts Overview
-      </h2>
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      {/* <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full"> */}
       <div className="mt-2">
+        <h2 className="text-lg font-medium leading-6 text-gray-900">
+          Accounts Overview
+        </h2>
         {/* Card */}
         {userBanks?.map((userBank) => (
           <div

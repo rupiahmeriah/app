@@ -89,6 +89,8 @@ export interface Database {
           bank_id: number | null
           created_at: string | null
           id: string
+          institution_type: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -100,6 +102,8 @@ export interface Database {
           bank_id?: number | null
           created_at?: string | null
           id: string
+          institution_type?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -111,6 +115,8 @@ export interface Database {
           bank_id?: number | null
           created_at?: string | null
           id?: string
+          institution_type?: string | null
+          updated_at?: string | null
           user_id?: string
         }
       }
@@ -140,7 +146,8 @@ export interface Database {
       user_bank_transactions: {
         Row: {
           amount: number
-          category: string | null
+          brick_category: string | null
+          category_id: number | null
           created_at: string | null
           date: string
           description: string | null
@@ -149,10 +156,12 @@ export interface Database {
           reference_id: string | null
           status: string
           user_bank_id: string
+          user_budget_id: number | null
         }
         Insert: {
           amount: number
-          category?: string | null
+          brick_category?: string | null
+          category_id?: number | null
           created_at?: string | null
           date: string
           description?: string | null
@@ -161,10 +170,12 @@ export interface Database {
           reference_id?: string | null
           status: string
           user_bank_id: string
+          user_budget_id?: number | null
         }
         Update: {
           amount?: number
-          category?: string | null
+          brick_category?: string | null
+          category_id?: number | null
           created_at?: string | null
           date?: string
           description?: string | null
@@ -173,6 +184,115 @@ export interface Database {
           reference_id?: string | null
           status?: string
           user_bank_id?: string
+          user_budget_id?: number | null
+        }
+      }
+      user_budget: {
+        Row: {
+          budget: number | null
+          category_id: number | null
+          created_at: string | null
+          current_difference: number | null
+          current_total: number | null
+          id: number
+          month: number | null
+          year: number | null
+        }
+        Insert: {
+          budget?: number | null
+          category_id?: number | null
+          created_at?: string | null
+          current_difference?: number | null
+          current_total?: number | null
+          id?: number
+          month?: number | null
+          year?: number | null
+        }
+        Update: {
+          budget?: number | null
+          category_id?: number | null
+          created_at?: string | null
+          current_difference?: number | null
+          current_total?: number | null
+          id?: number
+          month?: number | null
+          year?: number | null
+        }
+      }
+      user_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          exclude_from_budget: boolean | null
+          exclude_from_totals: boolean | null
+          id: number
+          name: string | null
+          treat_as_income: boolean | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          exclude_from_budget?: boolean | null
+          exclude_from_totals?: boolean | null
+          id?: number
+          name?: string | null
+          treat_as_income?: boolean | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          exclude_from_budget?: boolean | null
+          exclude_from_totals?: boolean | null
+          id?: number
+          name?: string | null
+          treat_as_income?: boolean | null
+        }
+      }
+      user_period_summary: {
+        Row: {
+          created_at: string | null
+          current_budget: number | null
+          id: number
+          net_income: number | null
+          other_expenses: number | null
+          other_income: number | null
+          projected_expenses: number | null
+          recurring_expenses: number | null
+          recurring_income: number | null
+          remaining_recurring_expense: number | null
+          total_budgeted: number | null
+          total_expenses: number | null
+          total_income: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_budget?: number | null
+          id?: number
+          net_income?: number | null
+          other_expenses?: number | null
+          other_income?: number | null
+          projected_expenses?: number | null
+          recurring_expenses?: number | null
+          recurring_income?: number | null
+          remaining_recurring_expense?: number | null
+          total_budgeted?: number | null
+          total_expenses?: number | null
+          total_income?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          current_budget?: number | null
+          id?: number
+          net_income?: number | null
+          other_expenses?: number | null
+          other_income?: number | null
+          projected_expenses?: number | null
+          recurring_expenses?: number | null
+          recurring_income?: number | null
+          remaining_recurring_expense?: number | null
+          total_budgeted?: number | null
+          total_expenses?: number | null
+          total_income?: number | null
         }
       }
     }
