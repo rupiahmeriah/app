@@ -16,31 +16,60 @@ export default function MonthlySpendingHabits() {
   const user = useUser();
   const [loading, setLoading] = useState(true);
 
-  const [userSpendingBreakdown, setUserSpendingBreakdown] = useState<any>([]);
+  const [stackedBarExpenseData, setStackedBarExpenseData] = useState<any>([]);
+  const [stackedBarIncomeData, setStackedBarIncomeData] = useState<any>([]);
 
   const [userSpendingTotals, setUserSpendingTotals] = useState<any>([]);
-
-  const [sessions] = useState([
-    {
-      label: "Food",
-      size: 60,
-      color: "red",
-    },
-    {
-      label: "Home, Auto",
-      size: 30,
-      color: "blue",
-    },
-    {
-      label: "Shopping",
-      size: 10,
-      color: "green",
-    },
-  ]);
 
   useEffect(() => {
     getUserSpendingBreakdown();
   }, [session, user]);
+
+  function getStackedBarData(data: any, restructuredSpendingTotals: any) {
+    let stackedBarExpenseData: any = [];
+    let stackedBarIncomeData: any = [];
+    data.forEach((category: any) => {
+      let name = category.name;
+
+      if (!name) {
+        if (category.direction == "in") {
+          name = "Other Income";
+        } else if (category.direction == "out") {
+          name = "Other Expenses";
+        }
+      }
+
+      if (category.direction == "in") {
+        stackedBarIncomeData.push({
+          name: name,
+          size: (category.total / restructuredSpendingTotals.out) * 100,
+          color: getRandomColor(),
+          total: category.total,
+        });
+      } else {
+        stackedBarExpenseData.push({
+          name: name,
+          size: (category.total / restructuredSpendingTotals.out) * 100,
+          color: getRandomColor(),
+          total: category.total,
+        });
+      }
+    });
+
+    // sort stackedBarData by size
+    stackedBarExpenseData.sort((a: any, b: any) => b.size - a.size);
+    stackedBarIncomeData.sort((a: any, b: any) => b.size - a.size);
+    return [stackedBarExpenseData, stackedBarIncomeData];
+  }
+
+  function getRandomColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
 
   async function getUserSpendingBreakdown() {
     try {
@@ -64,14 +93,25 @@ export default function MonthlySpendingHabits() {
         throw error;
       }
 
-      if (data) {
-        console.log(data);
-        setUserSpendingBreakdown(data);
-      }
-
-      if (spendingTotals) {
+      if (spendingTotals && data) {
         console.log(spendingTotals);
-        setUserSpendingTotals(spendingTotals);
+        const restructuredSpendingTotals: any = {};
+
+        console.log("ROT!", restructuredSpendingTotals);
+        spendingTotals.forEach((spendingTotal) => {
+          restructuredSpendingTotals[spendingTotal.direction] =
+            spendingTotal.total;
+        });
+        console.log("coocoorella", restructuredSpendingTotals);
+        setUserSpendingTotals(restructuredSpendingTotals);
+
+        console.log(data);
+        const stackedBarData = getStackedBarData(
+          data,
+          restructuredSpendingTotals
+        );
+        setStackedBarExpenseData(stackedBarData[0]);
+        setStackedBarIncomeData(stackedBarData[1]);
       }
     } catch (error) {
       alert("Error loading user data!");
@@ -83,7 +123,7 @@ export default function MonthlySpendingHabits() {
 
   return (
     <div className="bg-slate-100 p-4">
-      {session ? (
+      {session && !loading ? (
         <>
           <h2 className="mx-auto max-w-6xl px-4 text-sm text-center font-bold leading-6 text-slate-900 sm:px-6 lg:px-8">
             SPENDING BREAKDOWN
@@ -91,40 +131,56 @@ export default function MonthlySpendingHabits() {
 
           <div className="w-full border-t border-gray-300 my-2" />
 
-          {userSpendingTotals.map((userSpendingTotal: any) => {
-            return (
-              <div>
-                <div className="flex justify-between text-sm  font-semibold">
-                  <h3>
-                    {userSpendingTotal.direction == "out"
-                      ? "EXPENSES"
-                      : "INCOME"}
-                  </h3>
-                  <h3>
-                    {toRupiah(userSpendingTotal.total)}
-                    {userSpendingTotal.direction == "out" && (
-                      <>
-                        {" /"}{" "}
-                        <span className="text-slate-400">
-                          {toRupiah(750500.3)}
-                        </span>
-                      </>
-                    )}
-                  </h3>
-                </div>
-                <StackedBarChart sessions={sessions} />
-              </div>
-            );
-          })}
+          <div>
+            <div className="flex justify-between text-sm  font-semibold">
+              <h3>INCOME</h3>
+              <h3>{toRupiah(userSpendingTotals.in)}</h3>
+            </div>
+            <StackedBarChart
+              sessions={[
+                {
+                  name: "in",
+                  size:
+                    (userSpendingTotals.in /
+                      (userSpendingTotals.in + userSpendingTotals.out)) *
+                    100,
+                  color: "rgb(59, 209, 130)",
+                },
+                {
+                  name: "total",
+                  size:
+                    100 -
+                    (userSpendingTotals.in /
+                      (userSpendingTotals.in + userSpendingTotals.out)) *
+                      100,
+                  color: "#202020",
+                },
+              ]}
+            />
+          </div>
+          <div>
+            <div className="flex justify-between text-sm  font-semibold">
+              <h3>EXPENSE</h3>
+              <h3>
+                {toRupiah(userSpendingTotals.out)}
+                {" /"}{" "}
+                <span className="text-slate-400">{toRupiah(750500.3)}</span>
+              </h3>
+            </div>
+            <StackedBarChart sessions={stackedBarExpenseData} />
+          </div>
 
           <div className="text-sm">
             <div className="flex flex-col">
               <h3>INCOME</h3>
               <div className="w-full border-t border-gray-300 my-1" />
-              {userSpendingBreakdown.map((category: any) => {
+              {stackedBarIncomeData.map((category: any) => {
                 return (
-                  <div className="flex justify-between">
-                    <h3>{category.name ?? "Other"}</h3>
+                  <div className="flex justify-between gap-1">
+                    <h3 className="w-">{category.name}</h3>
+                    <div className="w-full mx-4">
+                      <StackedBarChart sessions={[category]} />
+                    </div>
                     <h3>{toRupiah(category.total)}</h3>
                   </div>
                 );
@@ -132,15 +188,21 @@ export default function MonthlySpendingHabits() {
             </div>
 
             <div className="flex flex-col mt-4">
-              <h3>EXPENSES</h3>
-              <div className="w-full border-t border-gray-300 my-1" />
-              {userSpendingBreakdown.map((category: any) => {
+              <div className="flex justify-between">
+                <h3>EXPENSES</h3>
+                <div className="flex">
+                  <h3>TOTAL SPENT</h3>
+                  <h3>PROJ. SPEND</h3>
+                  <h3>% OF TOTAL</h3>
+                </div>
+              </div>
+              <div className="w-full border-t border-gray-300 my-1 text-sm" />
+              {stackedBarExpenseData.map((category: any) => {
                 return (
-                  // <div>
                   <div className="flex justify-between gap-1">
-                    <h3>{category.name ?? "Other"}</h3>
+                    <h3 className="w-">{category.name}</h3>
                     <div className="w-full mx-4">
-                      <StackedBarChart sessions={sessions} />
+                      <StackedBarChart sessions={[category]} />
                     </div>
                     <h3>{toRupiah(category.total)}</h3>
                   </div>
