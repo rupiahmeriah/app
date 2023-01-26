@@ -36,7 +36,7 @@ export default function Example({
                   <div className="flex items-center">
                     <div>
                       <div className="flex items-center">
-                        <h1 className="ml-3 text-4xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
+                        <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
                           Welcome {supabaseSession.session?.user.email}!
                         </h1>
                       </div>

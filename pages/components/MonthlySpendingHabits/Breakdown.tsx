@@ -30,29 +30,29 @@ export default function Breakdown({
                   <tr>
                     <th
                       scope="col"
-                      className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-gray-900 sm:pl-6"
+                      className="py-3.5 pl-4 pr-3 text-left text-xs font-semibold text-slate-900 sm:pl-6"
                     >
                       CATEGORY
                     </th>
                     <th
                       scope="col"
-                      className="w-full px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                      className="w-full px-3 py-3.5 text-left text-xs font-semibold text-slate-900"
                     ></th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-left text-xs font-semibold text-slate-900"
                     >
                       TOTAL EARNED
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-left text-xs font-semibold text-slate-900"
                     >
                       PROJ. SPEND
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3.5 text-left text-xs font-semibold text-gray-900"
+                      className="px-3 py-3.5 text-left text-xs font-semibold text-slate-900"
                     >
                       % OF TOTAL
                     </th>
@@ -61,11 +61,11 @@ export default function Breakdown({
                 <tbody className="bg-white">
                   {shit.map((breakdown) => (
                     <Fragment key={breakdown.name}>
-                      <tr className="border-t border-gray-200">
+                      <tr className="border-t border-slate-200">
                         <th
                           colSpan={5}
                           scope="colgroup"
-                          className="bg-gray-50 px-4 py-2 text-left text-xs font-semibold text-gray-900 sm:px-6"
+                          className="bg-slate-50 px-4 py-2 text-left text-xs font-semibold text-slate-900 sm:px-6"
                         >
                           {breakdown.name}
                         </th>
@@ -76,24 +76,24 @@ export default function Breakdown({
                             key={category.name}
                             className={classNames(
                               categoryIdx === 0
-                                ? "border-gray-300"
-                                : "border-gray-200",
+                                ? "border-slate-300"
+                                : "border-slate-200",
                               "border-t"
                             )}
                           >
-                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-gray-900 sm:pl-6">
+                            <td className="whitespace-nowrap py-4 pl-4 pr-3 text-xs font-medium text-slate-900 sm:pl-6">
                               {category.name}
                             </td>
-                            <td className="align-middle w-full whitespace-nowrap py-4 text-xs font-medium text-gray-900">
+                            <td className="align-middle w-full whitespace-nowrap py-4 text-xs font-medium text-slate-900">
                               <StackedBarChart sessions={[category]} />
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-xs text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-xs text-slate-500">
                               {toRupiah(category.total)}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-xs text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-xs text-slate-500">
                               foo
                             </td>
-                            <td className="whitespace-nowrap px-3 py-4 text-xs text-gray-500">
+                            <td className="whitespace-nowrap px-3 py-4 text-xs text-slate-500">
                               {category.size.toFixed(2)}%
                             </td>
                           </tr>

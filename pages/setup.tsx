@@ -69,7 +69,7 @@ export default function SetupPage({
             <div className="py-10">
               <header>
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                  <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+                  <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
                     Setup
                   </h1>
                 </div>

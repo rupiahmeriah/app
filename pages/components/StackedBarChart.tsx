@@ -4,7 +4,7 @@ export const StackedBarChart = ({ sessions }: any) => {
   return (
     <div className="relative overflow-hidden transition-all duration-500">
       <div className="pb-4 lg:pb-6">
-        <div className="overflow-hidden rounded-full h-3 bg-gray-800 flex transition-all duration-500 w-full">
+        <div className="overflow-hidden rounded-full h-3 bg-slate-800 flex transition-all duration-500 w-full">
           {sessions.map((session: any) => {
             return (
               <div

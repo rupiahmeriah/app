@@ -128,7 +128,7 @@ export default function MonthlySpendingHabits() {
             SPENDING BREAKDOWN
           </h2>
 
-          <div className="w-full border-t border-gray-300 my-2" />
+          <div className="w-full border-t border-slate-300 my-2" />
 
           <div>
             <div className="flex justify-between text-sm  font-semibold">

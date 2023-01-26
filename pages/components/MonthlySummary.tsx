@@ -57,7 +57,7 @@ export default function MonthlySummary() {
           <h2 className="mx-auto max-w-6xl px-4 text-sm text-center font-bold leading-6 text-slate-900 sm:px-6 lg:px-8">
             THIS MONTH'S SUMMARY
           </h2>
-          <div className="w-full border-t border-gray-400 my-2" />
+          <div className="w-full border-t border-slate-300 my-2" />
 
           <Card
             title="Total Budgeted"
