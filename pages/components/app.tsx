@@ -1,5 +1,4 @@
 import { Session } from "@supabase/auth-helpers-react";
-
 import { useSessionContext } from "@supabase/auth-helpers-react";
 
 import AccountsOverview from "./AccountsOverview";
@@ -48,13 +47,13 @@ export default function Example({
             </div>
           </div>
 
-          <div className="mt-8 flex">
+          <div className="mt-8 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row">
             <div className="flex flex-col w-1/3 min-w-fit">
               <AccountsOverview userBanks={userBanks} />
               <MonthlySummary />
               <Institutions />
             </div>
-            <div className="w-1/3 min-w-fit">
+            <div className="">
               <MonthlySpendingHabits />
             </div>
             <div className="w-1/3 min-w-fit">
