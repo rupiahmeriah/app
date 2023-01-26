@@ -1,4 +1,7 @@
-export function toRupiah(number: number) {
+export function toRupiah(number: number): string {
+  if (!number) {
+    return "IDR 0";
+  }
   const formatter = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "IDR",
