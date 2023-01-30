@@ -4,14 +4,12 @@ import {
   useUser,
 } from "@supabase/auth-helpers-react";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
-import { ReactElement, useState } from "react";
 import { UserBankDetailType } from "../../types/highLevelTypes";
 
 import { supabase as supabaseClient } from "../../utils/supabaseClient";
 import { BankSetupSettings } from "../components/BankSetupSettings";
-import Tabs from "../components/Tabs";
 import { NextPageWithLayout } from "../_app";
-import { getLayout } from "./TabsLayout";
+import { TabsLayout } from "./TabsLayout";
 
 export async function getServerSideProps() {
   let { data } = await supabaseClient.from("user_bank_details").select(`
@@ -64,53 +62,53 @@ const Setup: NextPageWithLayout<{
           theme="dark"
         />
       ) : (
-        <div className="min-h-full">
-          {session.isLoading ? (
-            "Loading"
-          ) : (
-            <>
-              <div className="py-10">
-                <header>
-                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
-                      Accounts
-                    </h1>
-                  </div>
-                </header>
-                <main>
-                  <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    {/* Replace with your content */}
-                    <div className="px-4 py-8 sm:px-0">
-                      <div>
-                        <button
-                          type="button"
-                          className="mt-4 inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                          onClick={setupAndRedirectToBrickWidget}
-                        >
-                          Sync your bank accounts
-                        </button>
-                      </div>
-
-                      <div className="mt-10">
-                        <h2 className="text-xl font-semibold underline underline-offset-4 mb-2">
-                          Bank accounts
-                        </h2>
-
-                        <BankSetupSettings userBanks={userBanks} />
-                      </div>
+        <TabsLayout>
+          <div className="min-h-full">
+            {session.isLoading ? (
+              "Loading"
+            ) : (
+              <>
+                <div className="py-10">
+                  <header>
+                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                      <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
+                        Accounts
+                      </h1>
                     </div>
-                    {/* /End replace */}
-                  </div>
-                </main>
-              </div>
-            </>
-          )}
-        </div>
+                  </header>
+                  <main>
+                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                      {/* Replace with your content */}
+                      <div className="px-4 py-8 sm:px-0">
+                        <div>
+                          <button
+                            type="button"
+                            className="mt-4 inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            onClick={setupAndRedirectToBrickWidget}
+                          >
+                            Sync your bank accounts
+                          </button>
+                        </div>
+
+                        <div className="mt-10">
+                          <h2 className="text-xl font-semibold underline underline-offset-4 mb-2">
+                            Bank accounts
+                          </h2>
+
+                          <BankSetupSettings userBanks={userBanks} />
+                        </div>
+                      </div>
+                      {/* /End replace */}
+                    </div>
+                  </main>
+                </div>
+              </>
+            )}
+          </div>
+        </TabsLayout>
       )}
     </div>
   );
 };
-
-Setup.getLayout = getLayout;
 
 export default Setup;

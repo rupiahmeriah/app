@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useReducer } from "react";
+import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -16,7 +16,11 @@ import { Database } from "../../types/supabase";
 import { classNames } from "../../utils/classNames";
 
 const generateNavItem = (name: string, href: string, pathName: string) => {
-  return { name, href, current: pathName == href };
+  return {
+    name,
+    href,
+    current: href == "/" ? pathName === href : pathName.startsWith(href),
+  };
 };
 
 export default function Example() {

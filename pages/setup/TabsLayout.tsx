@@ -6,7 +6,11 @@ const generateNavItem = (name: string, href: string, pathName: string) => {
   return { name, href, current: pathName == href };
 };
 
-export function getLayout(page: ReactElement) {
+interface MyComponentProps {
+  children: React.ReactNode;
+}
+
+export const TabsLayout: React.FC<MyComponentProps> = (props) => {
   const pathName = usePathname() || "";
 
   const [tabs, setTabs] = useState([
@@ -17,7 +21,7 @@ export function getLayout(page: ReactElement) {
   return (
     <>
       <Tabs tabs={tabs} setTabs={setTabs} />
-      {page}
+      {props.children}
     </>
   );
-}
+};
