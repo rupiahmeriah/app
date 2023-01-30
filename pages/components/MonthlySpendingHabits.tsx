@@ -9,7 +9,10 @@ import {
 import { StackedBarChart } from "./StackedBarChart";
 import { Database } from "../../types/supabase";
 import { toRupiah } from "../../utils/toRupiah";
-import Breakdown from "./MonthlySpendingHabits/Breakdown";
+import Breakdown from "../MonthlySpendingHabits/Breakdown";
+
+type userSpendingBreakdownType =
+  Database["public"]["Views"]["user_spending_breakdown"]["Row"];
 
 export default function MonthlySpendingHabits() {
   const session = useSession();
@@ -28,7 +31,12 @@ export default function MonthlySpendingHabits() {
     }
   }, [session, user]);
 
-  function getStackedBarData(data: any, restructuredSpendingTotals: any) {
+  function getStackedBarData(
+    data: userSpendingBreakdownType[],
+    restructuredSpendingTotals: {
+      [x: string]: number;
+    }
+  ) {
     let stackedBarExpenseData: any = [];
     let stackedBarIncomeData: any = [];
     data.forEach((category: any) => {
@@ -78,9 +86,11 @@ export default function MonthlySpendingHabits() {
     try {
       setLoading(true);
 
-      let { data, error, status } = await supabase
-        .from("user_spending_breakdown")
-        .select();
+      let {
+        data: userSpendingBreakdownData,
+        error,
+        status,
+      } = await supabase.from("user_spending_breakdown").select();
 
       let {
         data: spendingTotals,
@@ -96,17 +106,16 @@ export default function MonthlySpendingHabits() {
         throw error;
       }
 
-      if (spendingTotals && data) {
-        const restructuredSpendingTotals: any = {};
+      if (spendingTotals && userSpendingBreakdownData) {
+        const restructuredSpendingTotals = {
+          [spendingTotals[0].direction!]: spendingTotals[0].total!,
+          [spendingTotals[1].direction!]: spendingTotals[1].total!,
+        };
 
-        spendingTotals.forEach((spendingTotal) => {
-          restructuredSpendingTotals[spendingTotal.direction!] =
-            spendingTotal.total;
-        });
         setUserSpendingTotals(restructuredSpendingTotals);
 
         const stackedBarData = getStackedBarData(
-          data,
+          userSpendingBreakdownData,
           restructuredSpendingTotals
         );
         setStackedBarExpenseData(stackedBarData[0]);

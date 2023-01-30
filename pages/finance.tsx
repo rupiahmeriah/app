@@ -1,15 +1,6 @@
 import { Session } from "@supabase/auth-helpers-react";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 
-import AccountsOverview from "./AccountsOverview";
-import MonthlySummary from "./MonthlySummary";
-import MonthlySpendingHabits from "./MonthlySpendingHabits";
-import TransactionsReview from "./TransactionsReview";
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Example({
   session,
   userBanks,
@@ -35,7 +26,7 @@ export default function Example({
                     <div>
                       <div className="flex items-center">
                         <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
-                          Welcome {supabaseSession.session?.user.email}!
+                          Budget
                         </h1>
                       </div>
                     </div>
@@ -45,18 +36,7 @@ export default function Example({
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row">
-            <div className="flex flex-col w-1/3 min-w-fit">
-              <AccountsOverview userBanks={userBanks} />
-              <MonthlySummary />
-            </div>
-            <div className="">
-              <MonthlySpendingHabits />
-            </div>
-            <div className="w-1/3 min-w-fit">
-              <TransactionsReview />
-            </div>
-          </div>
+          <div className="mt-8 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row"></div>
         </main>
       </div>
     </div>

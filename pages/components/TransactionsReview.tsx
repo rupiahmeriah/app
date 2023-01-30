@@ -1,15 +1,3 @@
-import { ScaleIcon } from "@heroicons/react/24/outline";
-
-const navigation = [
-  { name: "Home", href: "#", current: true },
-  { name: "Finances", href: "#", current: false },
-  { name: "Setup", href: "#", current: false },
-];
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function Example() {
   return (
     <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full">

@@ -1,13 +1,19 @@
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
-import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
+import {
+  useSession,
+  useSupabaseClient,
+  useUser,
+} from "@supabase/auth-helpers-react";
 
 import { supabase } from "../utils/supabaseClient";
 
 import App from "./components/app";
+import { Database } from "../types/supabase";
 
 const Login = ({ userBanks, transactions }: any) => {
   const session = useSession();
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
+  const user = useUser();
 
   return (
     <div className="py-10">
@@ -38,16 +44,16 @@ export async function getServerSideProps() {
     .select();
 
   let { data } = await supabase.from("user_bank_details").select(`
-    balances_available,
-    balances_current,
-    user_id,
-    account_id,
-    account_holder,
-    id,
-    account_number,
-    institutions (
-      name
-    )
+      balances_available,
+      balances_current,
+      user_id,
+      account_id,
+      account_holder,
+      id,
+      account_number,
+      institutions (
+        name
+      )
   `);
 
   return {
@@ -57,31 +63,4 @@ export async function getServerSideProps() {
     },
   };
 }
-
-// export const handleAuthProvider = async (ctx: GetServerSidePropsContext) => {
-//   // Check if we have a session
-//   const {
-//     data: { session },
-//   } = await supabase.auth.getSession();
-
-//   if (!session) {
-//     return null;
-//   }
-
-//   // Retrieve provider_token & logged in user's third-party id from metadata
-//   const { provider_token, user } = session
-//   const userId = user.user_metadata.user_name
-
-//   const allRepos = await (
-//     await fetch(`https://api.github.com/search/repositories?q=user:${userId}`, {
-//       method: 'GET',
-//       headers: {
-//         Authorization: `token ${provider_token}`,
-//       },
-//     })
-//   ).json()
-
-//   return { props: { user, allRepos } }
-// }
-
 export default Login;

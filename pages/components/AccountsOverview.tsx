@@ -8,10 +8,9 @@ export default function AccountsOverview({
 }) {
   return (
     <div className="mx-auto sm:px-6 lg:px-8 w-full">
-      {/* <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 w-full"> */}
       <div className="mt-2 bg-slate-100 p-4">
         <h2 className="mx-auto max-w-6xl px-4 text-sm text-center font-bold leading-6 text-slate-900 sm:px-6 lg:px-8">
-          THIS MONTH'S SUMMARY
+          ACCOUNTS OVERVIEW
         </h2>
         <div className="w-full border-t border-slate-300 my-2" />
 

@@ -24,12 +24,9 @@ export default function Example() {
   const supabaseClient = useSupabaseClient<Database>();
   const session = useSessionContext();
 
-  useEffect(() => {
-    console.log("sessionerino", session);
-  }, [session]);
-
   const navigation = [
     generateNavItem("Home", "/", pathName),
+    generateNavItem("Finance", "/finance", pathName),
     generateNavItem("Setup", "/setup", pathName),
   ];
 
