@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
-import { classNames } from "../../utils/classNames";
+import { classNames } from "../utils/classNames";
 
 type TabType = { name: string; href: string; current: boolean };
 

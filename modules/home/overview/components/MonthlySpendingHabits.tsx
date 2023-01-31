@@ -6,10 +6,10 @@ import {
   useUser,
 } from "@supabase/auth-helpers-react";
 
-import { StackedBarChart } from "./StackedBarChart";
-import { Database } from "../../types/supabase";
-import { toRupiah } from "../../utils/toRupiah";
-import Breakdown from "../MonthlySpendingHabits/Breakdown";
+import { StackedBarChart } from "../../../../common/StackedBarChart";
+import { Database } from "../../../../types/supabase";
+import { toRupiah } from "../../../../utils/toRupiah";
+import Breakdown from "./Breakdown";
 
 type userSpendingBreakdownType =
   Database["public"]["Views"]["user_spending_breakdown"]["Row"];

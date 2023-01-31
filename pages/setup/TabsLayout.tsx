@@ -1,6 +1,6 @@
 import { usePathname } from "next/navigation";
-import { ReactElement, useState } from "react";
-import Tabs from "../components/Tabs";
+import { useState } from "react";
+import Tabs from "../../common/Tabs";
 
 const generateNavItem = (name: string, href: string, pathName: string) => {
   return { name, href, current: pathName == href };

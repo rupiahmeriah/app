@@ -1,4 +1,4 @@
-import { toRupiah } from "../../utils/toRupiah";
+import { toRupiah } from "../../../../utils/toRupiah";
 
 export function BankSetupSettings({ userBanks }: any) {
   return (

@@ -1,6 +1,6 @@
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
-import Account from "./components/Account";
+import Account from "../common/Account";
 
 const Login = () => {
   const session = useSession();

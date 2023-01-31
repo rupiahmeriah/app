@@ -6,7 +6,7 @@ import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
 
 import "../styles/globals.css";
 
-import NavBar from "./components/Navbar";
+import NavBar from "../common/Navbar";
 import { NextPage } from "next";
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {

@@ -7,7 +7,7 @@ import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
 import { UserBankDetailType } from "../../types/highLevelTypes";
 
 import { supabase as supabaseClient } from "../../utils/supabaseClient";
-import { BankSetupSettings } from "../components/BankSetupSettings";
+import { BankSetupSettings } from "../../modules/setup/accounts/components/BankSetupSettings";
 import { NextPageWithLayout } from "../_app";
 import { TabsLayout } from "./TabsLayout";
 

@@ -7,8 +7,8 @@ import {
   useUser,
 } from "@supabase/auth-helpers-react";
 
-import { Database } from "../../types/supabase";
-import { toRupiah } from "../../utils/toRupiah";
+import { Database } from "../../../../types/supabase";
+import { toRupiah } from "../../../../utils/toRupiah";
 
 export default function MonthlySummary() {
   const session = useSession();

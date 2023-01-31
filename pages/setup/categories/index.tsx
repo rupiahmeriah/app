@@ -19,27 +19,32 @@ export default function Example({
         <div className="flex flex-1 flex-col lg:pl-10">
           <main className="flex-1 pb-8">
             {/* Page header */}
-            <div className="bg-white">
-              <div className="px-4 sm:px-6 lg:max-w-6xl">
-                <div className="py-6 md:flex md:items-center md:justify-between">
-                  <div className="min-w-0 flex-1">
-                    {/* Profile */}
-                    <div className="flex items-center">
-                      <div>
-                        <div className="flex items-center">
-                          <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
-                            Categories
-                          </h1>
-                        </div>
+            <div className="px-4 sm:px-6 lg:max-w-6xl">
+              <div className="py-6 md:flex md:items-center md:justify-between">
+                <div className="min-w-0 flex-1">
+                  {/* Profile */}
+                  <div className="flex items-center">
+                    <div>
+                      <div className="flex items-center">
+                        <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
+                          Categories
+                        </h1>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="mt-8 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row">
-              foo in the bar in the foo
+              <div className="mt-2 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row">
+                <div>
+                  <button
+                    type="button"
+                    className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-3 py-2 text-sm font-medium leading-4 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                  >
+                    Add New Category
+                  </button>
+                </div>
+              </div>
             </div>
           </main>
         </div>

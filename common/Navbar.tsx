@@ -12,8 +12,8 @@ import {
   useSessionContext,
   useSupabaseClient,
 } from "@supabase/auth-helpers-react";
-import { Database } from "../../types/supabase";
-import { classNames } from "../../utils/classNames";
+import { Database } from "../types/supabase";
+import { classNames } from "../utils/classNames";
 
 const generateNavItem = (name: string, href: string, pathName: string) => {
   return {

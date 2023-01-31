@@ -1,5 +1,5 @@
-import { UserBankDetailType } from "../../types/highLevelTypes";
-import { toRupiah } from "../../utils/toRupiah";
+import { UserBankDetailType } from "../../../../types/highLevelTypes";
+import { toRupiah } from "../../../../utils/toRupiah";
 
 export default function AccountsOverview({
   userBanks,

@@ -1,40 +1,55 @@
-import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
-import {
-  useSession,
-  useSupabaseClient,
-  useUser,
-} from "@supabase/auth-helpers-react";
-
 import { supabase } from "../utils/supabaseClient";
 
-import App from "./components/app";
-import { Database } from "../types/supabase";
+import { AuthGuard } from "../common/AuthGuard";
+import { useSessionContext } from "@supabase/auth-helpers-react";
+import AccountsOverview from "../modules/home/overview/components/AccountsOverview";
+import MonthlySpendingHabits from "../modules/home/overview/components/MonthlySpendingHabits";
+import MonthlySummary from "../modules/home/overview/components/MonthlySummary";
+import TransactionsReview from "../modules/home/overview/components/TransactionsReview";
 
 const Login = ({ userBanks, transactions }: any) => {
-  const session = useSession();
-  const supabase = useSupabaseClient<Database>();
-  const user = useUser();
-
+  const supabaseSession = useSessionContext();
   return (
-    <div className="py-10">
-      {!session ? (
-        <div className="mx-auto max-w-2xl sm:px-6 lg:px-8">
-          <Auth
-            supabaseClient={supabase}
-            appearance={{ theme: ThemeSupa }}
-            theme="light"
-            providers={["google", "twitter"]}
-            // redirectTo="https://localhost:3001"
-          />
+    <AuthGuard>
+      <div className="min-h-full">
+        <div className="flex flex-1 flex-col lg:pl-10">
+          <main className="flex-1 pb-8">
+            {/* Page header */}
+            <div className="bg-white">
+              <div className="px-4 sm:px-6 lg:max-w-6xl">
+                <div className="py-6 md:flex md:items-center md:justify-between">
+                  <div className="min-w-0 flex-1">
+                    {/* Profile */}
+                    <div className="flex items-center">
+                      <div>
+                        <div className="flex items-center">
+                          <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
+                            Welcome {supabaseSession.session?.user.email}!
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 grid grid-cols-[minmax(200px,auto)_1fr_0.3fr] grid-flow-row">
+              <div className="flex flex-col w-1/3 min-w-fit">
+                <AccountsOverview userBanks={userBanks} />
+                <MonthlySummary />
+              </div>
+              <div className="">
+                <MonthlySpendingHabits />
+              </div>
+              <div className="w-1/3 min-w-fit">
+                <TransactionsReview />
+              </div>
+            </div>
+          </main>
         </div>
-      ) : (
-        <App
-          session={session}
-          userBanks={userBanks}
-          transactions={transactions}
-        />
-      )}
-    </div>
+      </div>
+    </AuthGuard>
   );
 };
 

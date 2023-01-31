@@ -1,5 +1,5 @@
 import { BanknotesIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { classNames } from "../../utils/classNames";
+import { classNames } from "../../../../utils/classNames";
 
 export const Transactions = ({ transactions }: any) => {
   return (

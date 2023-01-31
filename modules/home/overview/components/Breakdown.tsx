@@ -1,7 +1,7 @@
 import { Fragment } from "react";
-import { classNames } from "../../utils/classNames";
-import { toRupiah } from "../../utils/toRupiah";
-import { StackedBarChart } from "../components/StackedBarChart";
+import { classNames } from "../../../../utils/classNames";
+import { toRupiah } from "../../../../utils/toRupiah";
+import { StackedBarChart } from "../../../../common/StackedBarChart";
 
 export default function Breakdown({
   userSpendingTotals,
