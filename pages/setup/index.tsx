@@ -10,6 +10,7 @@ import { supabase as supabaseClient } from "../../utils/supabaseClient";
 import { BankSetupSettings } from "../../modules/setup/accounts/components/BankSetupSettings";
 import { NextPageWithLayout } from "../_app";
 import { TabsLayout } from "./TabsLayout";
+import { AuthGuard } from "../../common/AuthGuard";
 
 export async function getServerSideProps() {
   let { data } = await supabaseClient.from("user_bank_details").select(`
@@ -54,60 +55,62 @@ const Setup: NextPageWithLayout<{
   }
 
   return (
-    <div className="container">
-      {!session ? (
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-        />
-      ) : (
-        <TabsLayout>
-          <div className="min-h-full">
-            {session.isLoading ? (
-              "Loading"
-            ) : (
-              <>
-                <div className="py-10">
-                  <header>
-                    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                      <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
-                        Accounts
-                      </h1>
-                    </div>
-                  </header>
-                  <main>
-                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                      {/* Replace with your content */}
-                      <div className="px-4 py-8 sm:px-0">
-                        <div>
-                          <button
-                            type="button"
-                            className="mt-4 inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-                            onClick={setupAndRedirectToBrickWidget}
-                          >
-                            Sync your bank accounts
-                          </button>
-                        </div>
-
-                        <div className="mt-10">
-                          <h2 className="text-xl font-semibold underline underline-offset-4 mb-2">
-                            Bank accounts
-                          </h2>
-
-                          <BankSetupSettings userBanks={userBanks} />
-                        </div>
+    <AuthGuard>
+      <div className="container">
+        {!session ? (
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            theme="dark"
+          />
+        ) : (
+          <TabsLayout>
+            <div className="min-h-full">
+              {session.isLoading ? (
+                "Loading"
+              ) : (
+                <>
+                  <div className="py-10">
+                    <header>
+                      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                        <h1 className="text-3xl font-bold leading-tight tracking-tight text-slate-900">
+                          Accounts
+                        </h1>
                       </div>
-                      {/* /End replace */}
-                    </div>
-                  </main>
-                </div>
-              </>
-            )}
-          </div>
-        </TabsLayout>
-      )}
-    </div>
+                    </header>
+                    <main>
+                      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        {/* Replace with your content */}
+                        <div className="px-4 py-8 sm:px-0">
+                          <div>
+                            <button
+                              type="button"
+                              className="mt-4 inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                              onClick={setupAndRedirectToBrickWidget}
+                            >
+                              Sync your bank accounts
+                            </button>
+                          </div>
+
+                          <div className="mt-10">
+                            <h2 className="text-xl font-semibold underline underline-offset-4 mb-2">
+                              Bank accounts
+                            </h2>
+
+                            <BankSetupSettings userBanks={userBanks} />
+                          </div>
+                        </div>
+                        {/* /End replace */}
+                      </div>
+                    </main>
+                  </div>
+                </>
+              )}
+            </div>
+          </TabsLayout>
+        )}
+      </div>
+    </AuthGuard>
   );
 };
 

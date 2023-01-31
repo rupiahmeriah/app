@@ -1,22 +1,38 @@
-import { useState } from "react";
+import {
+  useSessionContext,
+  useSupabaseClient,
+} from "@supabase/auth-helpers-react";
+import { useEffect, useState } from "react";
+
 import Toggle from "../../../../common/Toggle";
+import { Database } from "../../../../types/supabase";
 
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
+export default function CategoriesTable() {
+  const supabaseSession = useSessionContext();
+  const supabase = useSupabaseClient<Database>();
 
-export default function Example() {
+  const [categories, setCategories] =
+    useState<Database["public"]["Tables"]["user_categories"]["Row"][]>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [treatAsIncome, setTreatAsIncome] = useState(false);
   const [excludeFromBudget, setExcludeFromBudget] = useState(false);
   const [excludeFromTotals, setExcludeFromTotals] = useState(false);
+
+  useEffect(() => {
+    const getUserCategories = async () => {
+      const { data, error } = await supabase
+        .from("user_categories")
+        .select("*")
+        .order("name", { ascending: true });
+      if (error) {
+        console.log(error);
+      }
+      setCategories(data!);
+    };
+
+    getUserCategories();
+  }, [supabaseSession, supabase]);
 
   const handleSubmit = async (event: any) => {
     // Stop the form from submitting and refreshing the page.
@@ -35,6 +51,27 @@ export default function Example() {
     const JSONdata = JSON.stringify(data);
 
     console.log(`Is this your category: ${JSONdata}`);
+
+    if (supabaseSession.session) {
+      try {
+        const { error } = await supabase.from("user_categories").insert({
+          name: data.name,
+          description: data.description,
+          treat_as_income: data.treatAsIncome,
+          exclude_from_budget: data.excludeFromBudget,
+          exclude_from_totals: data.excludeFromTotals,
+          user_id: supabaseSession.session.user.id,
+        });
+
+        if (error) {
+          console.log("db error", error);
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    } else {
+      alert("No user logged in, or user session haven't been loaded yet.");
+    }
   };
 
   return (
@@ -131,30 +168,24 @@ export default function Example() {
                 </button>
               </td>
             </tr>
-            {people.map((person) => (
-              <tr key={person.email}>
+            {categories?.map((category) => (
+              <tr key={category.name}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                  {person.name}
-                  <dl className="font-normal lg:hidden">
-                    <dt className="sr-only">Title</dt>
-                    <dd className="mt-1 truncate text-gray-700">
-                      {person.title}
-                    </dd>
-                    <dt className="sr-only sm:hidden">Email</dt>
-                    <dd className="mt-1 truncate text-gray-500 sm:hidden">
-                      <Toggle />
-                    </dd>
-                  </dl>
+                  {category.name}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                  {person.title}
+                  {category.description}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                  <Toggle />
+                  {category.treat_as_income ? "Yes" : "No"}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  <Toggle />
+                  {category.exclude_from_budget ? "Yes" : "No"}
                 </td>
+                <td className="px-3 py-4 text-sm text-gray-500">
+                  {category.exclude_from_totals ? "Yes" : "No"}
+                </td>
+                <td className="px-3 py-4 text-sm text-gray-500"></td>
               </tr>
             ))}
           </tbody>
