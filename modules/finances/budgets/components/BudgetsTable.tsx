@@ -6,18 +6,15 @@ import { useEffect, useState } from "react";
 
 import { Database } from "../../../../types/supabase";
 
-type UserBudgetsCategory =
-  Database["public"]["Tables"]["user_budgets"]["Row"] & {
-    user_categories: { name: string | null };
-  };
+type UserBudgetsCategory = { name: string } & {
+  user_budgets: Database["public"]["Tables"]["user_budgets"]["Row"][];
+};
 
 export default function BudgetsTable() {
   const supabaseSession = useSessionContext();
   const supabase = useSupabaseClient<Database>();
 
-  const [budgets, setBudgets] = useState<UserBudgetsCategory[]>();
-  const [previousBudgets, setPreviousBudgets] =
-    useState<UserBudgetsCategory[]>();
+  const [categories, setBudgets] = useState<UserBudgetsCategory[]>();
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -39,28 +36,28 @@ export default function BudgetsTable() {
       );
 
       const { data, error } = await supabase
-        .from("user_budgets")
+        .from("user_categories")
         .select(
           `
-                id,
-                user_id,
-                period,
-                budget,
-                current_total,
-                remaining,
-                created_at,
-                category_id,
-                user_categories (
-                    name
+                name,
+                user_budgets (
+                    id,
+                    user_id,
+                    period,
+                    budget,
+                    current_total,
+                    remaining,
+                    created_at,
+                    category_id
                 )
             `
         )
-        .in("period", [
+        .in("user_budgets.period", [
           firstDayOfLastMonth.toDateString(),
           firstDayofThisMonth.toDateString(),
         ])
-        .order("period", { ascending: false });
-      console.log("dataer user_budgets", data);
+        .filter("treat_as_income", "eq", false);
+
       if (error) {
         console.log(error);
         return;
@@ -68,8 +65,7 @@ export default function BudgetsTable() {
         console.log("No data");
         return;
       }
-      setBudgets(data.slice(0, data.length / 2) as UserBudgetsCategory[]);
-      setPreviousBudgets(data.slice(data.length / 2) as UserBudgetsCategory[]);
+      setBudgets(data as UserBudgetsCategory[]);
     };
 
     getUserBudgets();
@@ -101,7 +97,7 @@ export default function BudgetsTable() {
               </th>
               <th
                 scope="col"
-                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 border-r-2 border-slate-300 border-dashed"
               >
                 DIFFERENCE
               </th>
@@ -126,28 +122,28 @@ export default function BudgetsTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {budgets?.map((budget, index) => (
-              <tr key={budget.user_categories.name}>
+            {categories?.map((category, index) => (
+              <tr key={category.name}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
-                  {budget.user_categories.name}
+                  {category.name}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                  {budget.budget}
+                  {category.user_budgets[0]?.budget || 0}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                  {budget.current_total}
+                  {category.user_budgets[0]?.current_total || 0}
+                </td>
+                <td className="px-3 py-4 text-sm text-gray-500 border-r-2 border-slate-200 border-dashed">
+                  {category.user_budgets[0]?.remaining || 0}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {budget.remaining}
+                  {category.user_budgets[1]?.budget || 0}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {previousBudgets?.[index].budget}
+                  {category.user_budgets[1]?.current_total || 0}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {previousBudgets?.[index].current_total}
-                </td>
-                <td className="px-3 py-4 text-sm text-gray-500">
-                  {previousBudgets?.[index].remaining}
+                  {category.user_budgets[1]?.remaining || 0}
                 </td>
               </tr>
             ))}
