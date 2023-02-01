@@ -4,6 +4,7 @@ import { Session } from "@supabase/auth-helpers-react";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { AuthGuard } from "../common/AuthGuard";
 import DropDown from "../common/DropDown";
+import BudgetsTable from "../modules/finances/budgets/components/BudgetsTable";
 
 export default function Example({
   session,
@@ -66,6 +67,8 @@ export default function Example({
                     </div>
                   </div>
                 </div>
+
+                <BudgetsTable />
               </div>
             </div>
           </main>
