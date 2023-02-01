@@ -47,25 +47,42 @@ export default function CategoriesTable() {
       excludeFromTotals,
     };
 
-    // Send the data to the server in JSON format.
-    const JSONdata = JSON.stringify(data);
+    // check if data.name is unique in categories
+    const isUnique = categories?.every((category) => category.name !== name);
 
-    console.log(`Is this your category: ${JSONdata}`);
+    if (!isUnique) {
+      alert("Category name must be unique.");
+      return;
+    }
 
     if (supabaseSession.session) {
       try {
-        const { error } = await supabase.from("user_categories").insert({
-          name: data.name,
-          description: data.description,
-          treat_as_income: data.treatAsIncome,
-          exclude_from_budget: data.excludeFromBudget,
-          exclude_from_totals: data.excludeFromTotals,
-          user_id: supabaseSession.session.user.id,
-        });
+        const { data: newCategory, error } = await supabase
+          .from("user_categories")
+          .insert({
+            name: data.name,
+            description: data.description,
+            treat_as_income: data.treatAsIncome,
+            exclude_from_budget: data.excludeFromBudget,
+            exclude_from_totals: data.excludeFromTotals,
+            user_id: supabaseSession.session.user.id,
+          })
+          .select()
+          .single();
 
         if (error) {
           console.log("db error", error);
         }
+
+        setCategories((prevCategories) => {
+          return [...prevCategories!, newCategory!];
+        });
+
+        setName("");
+        setDescription("");
+        setTreatAsIncome(false);
+        setExcludeFromBudget(false);
+        setExcludeFromTotals(false);
       } catch (error) {
         console.log("error", error);
       }
