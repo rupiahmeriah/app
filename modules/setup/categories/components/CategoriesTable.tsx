@@ -194,13 +194,13 @@ export default function CategoriesTable() {
                   {category.description}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
-                  {category.treat_as_income ? "Yes" : "No"}
+                  {category.treat_as_income ? "✔️" : ""}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {category.exclude_from_budget ? "Yes" : "No"}
+                  {category.exclude_from_budget ? "✔️" : ""}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500">
-                  {category.exclude_from_totals ? "Yes" : "No"}
+                  {category.exclude_from_totals ? "✔️" : ""}
                 </td>
                 <td className="px-3 py-4 text-sm text-gray-500"></td>
               </tr>
