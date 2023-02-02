@@ -10,17 +10,22 @@ type UserBudgetsCategory = { name: string } & {
   user_budgets: Database["public"]["Tables"]["user_budgets"]["Row"][];
 };
 
+type CategoryEditStatusType = {
+  [key: string]: {
+    isEditing: boolean;
+    budget: number;
+    remaining: number;
+  };
+};
+
 export default function BudgetsTable() {
   const supabaseSession = useSessionContext();
   const supabase = useSupabaseClient<Database>();
 
   const [categories, setBudgets] = useState<UserBudgetsCategory[]>();
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [treatAsIncome, setTreatAsIncome] = useState(false);
-  const [excludeFromBudget, setExcludeFromBudget] = useState(false);
-  const [excludeFromTotals, setExcludeFromTotals] = useState(false);
+  const [categoryEditStatus, setCategoryEditStatus] =
+    useState<CategoryEditStatusType>();
 
   useEffect(() => {
     const getUserBudgets = async () => {
@@ -65,7 +70,21 @@ export default function BudgetsTable() {
         console.log("No data");
         return;
       }
-      setBudgets(data as UserBudgetsCategory[]);
+
+      const finalData = data as UserBudgetsCategory[];
+
+      setBudgets(finalData);
+
+      const foo: CategoryEditStatusType = {};
+      finalData.forEach((category) => {
+        foo[category.name!] = {
+          isEditing: false,
+          budget: category.user_budgets[0].budget,
+          remaining: category.user_budgets[0].remaining,
+        };
+      });
+
+      setCategoryEditStatus(foo);
     };
 
     getUserBudgets();
@@ -99,7 +118,7 @@ export default function BudgetsTable() {
                 scope="col"
                 className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 border-r-2 border-slate-300 border-dashed"
               >
-                DIFFERENCE
+                REMAINING
               </th>
               <th
                 scope="col"
@@ -117,7 +136,7 @@ export default function BudgetsTable() {
                 scope="col"
                 className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
               >
-                DIFFERENCE
+                REMAINING
               </th>
             </tr>
           </thead>
@@ -128,7 +147,78 @@ export default function BudgetsTable() {
                   {category.name}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 lg:table-cell">
-                  {category.user_budgets[0]?.budget || 0}
+                  {categoryEditStatus?.[category.name!].isEditing ? (
+                    <input
+                      type="text"
+                      value={categoryEditStatus?.[category.name!].budget}
+                      onChange={(e) => {
+                        setCategoryEditStatus((prev) => {
+                          if (!prev) return prev;
+                          return {
+                            ...prev,
+                            [category.name!]: {
+                              ...prev[category.name!],
+                              budget: parseInt(e.target.value) || 0,
+                              remaining:
+                                parseInt(e.target.value) -
+                                category.user_budgets[0].current_total,
+                            },
+                          };
+                        });
+                      }}
+                      onBlur={async () => {
+                        const { data, error } = await supabase
+                          .from("user_budgets")
+                          .update({
+                            budget: categoryEditStatus?.[category.name!].budget,
+                            remaining:
+                              categoryEditStatus?.[category.name!].remaining,
+                          })
+                          .eq("id", category.user_budgets[0].id);
+
+                        setCategoryEditStatus((prev) => {
+                          if (!prev) return prev;
+                          return {
+                            ...prev,
+                            [category.name!]: {
+                              ...prev[category.name!],
+                              isEditing: false,
+                            },
+                          };
+                        });
+
+                        if (error) {
+                          console.log(error);
+                          return;
+                        } else if (!data) {
+                          console.log("No data");
+                          return;
+                        }
+                      }}
+                    />
+                  ) : (
+                    // onclick, set isEditing to true
+
+                    <span
+                      className="inline-flex items-center space-x-3"
+                      onClick={() => {
+                        setCategoryEditStatus((prev) => {
+                          if (!prev) return prev;
+                          return {
+                            ...prev,
+                            [category.name!]: {
+                              ...prev[category.name!],
+                              isEditing: true,
+                            },
+                          };
+                        });
+                      }}
+                    >
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        {category.user_budgets[0]?.budget}
+                      </p>
+                    </span>
+                  )}
                 </td>
                 <td className="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell">
                   {category.user_budgets[0]?.current_total || 0}
