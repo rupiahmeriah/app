@@ -119,7 +119,7 @@ export default function BudgetsTable() {
         .filter("treat_as_income", "eq", false)
         // order user_budgets by period
         .order("period", {
-          ascending: true,
+          ascending: false,
           foreignTable: "user_budgets",
         });
 
