@@ -2,15 +2,16 @@ import {
   useSessionContext,
   useSupabaseClient,
 } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 
 import { Database } from "../../../../types/supabase";
+import { handleWindowClick } from "../utils/handleWindowClick";
 
-type UserBudgetsCategory = { name: string } & {
+export type UserBudgetsCategory = { name: string } & {
   user_budgets: Database["public"]["Tables"]["user_budgets"]["Row"][];
 };
 
-type CategoryEditStatusType = {
+export type CategoryEditStatusType = {
   [key: string]: {
     budget: number;
     remaining: number;
@@ -22,13 +23,61 @@ export default function BudgetsTable() {
   const supabaseSession = useSessionContext();
   const supabase = useSupabaseClient<Database>();
 
-  const [categories, setBudgets] = useState<UserBudgetsCategory[]>();
+  const [budgets, setBudgets] = useState<UserBudgetsCategory[]>();
 
-  const [categoryEditStatus, setCategoryEditStatus] =
-    useState<CategoryEditStatusType>();
-
-  const [isEditing, setIsEditing] = useState(false);
   const [categoryBeingEdited, setCategoryBeingEdited] = useState<string>();
+
+  type ActionType =
+    | {
+        type: "UPDATE_BUDGET";
+        payload: { categoryName: string; budget: number };
+      }
+    | {
+        type: "ASSIGN_BULK_BUDGET";
+        payload: { categories: CategoryEditStatusType };
+      }
+    | { type: "OTHER_ACTION" };
+
+  type CategoryEditStatusType = {
+    [key: string]: {
+      budget: number;
+      currentTotal: number;
+      remaining: number;
+      id: number;
+    };
+  };
+
+  const categoryEditStatusReducer = (
+    state: CategoryEditStatusType,
+    action: ActionType
+  ) => {
+    switch (action.type) {
+      case "UPDATE_BUDGET":
+        const { categoryName, budget } = action.payload;
+        const category = state[categoryName];
+        const remaining = budget - category.currentTotal;
+        return { ...state, [categoryName]: { ...category, budget, remaining } };
+      case "ASSIGN_BULK_BUDGET":
+        return action.payload.categories;
+      case "OTHER_ACTION":
+        return state;
+      default:
+        return state;
+    }
+  };
+
+  const [categoryEditStatus, dispatch] = useReducer(
+    categoryEditStatusReducer,
+    {}
+  );
+
+  const updateBudget = (categoryName: string, budget: number) => {
+    dispatch({ type: "UPDATE_BUDGET", payload: { categoryName, budget } });
+  };
+
+  const assignBulkBudget = (categories: CategoryEditStatusType) => {
+    dispatch({ type: "ASSIGN_BULK_BUDGET", payload: { categories } });
+  };
 
   useEffect(() => {
     const getUserBudgets = async () => {
@@ -83,118 +132,40 @@ export default function BudgetsTable() {
 
       setBudgets(finalData);
 
-      const foo: CategoryEditStatusType = {};
+      const finalCategoryBeingEdited: CategoryEditStatusType = {};
       finalData.forEach((category) => {
-        foo[category.name!] = {
+        finalCategoryBeingEdited[category.name!] = {
           budget: category.user_budgets[0].budget,
+          currentTotal: category.user_budgets[0].current_total,
           remaining: category.user_budgets[0].remaining,
           id: category.user_budgets[0].id,
         };
       });
 
-      setCategoryEditStatus(foo);
+      assignBulkBudget(finalCategoryBeingEdited);
     };
 
     getUserBudgets();
   }, [supabaseSession, supabase]);
 
   useEffect(() => {
-    const handleWindowClick = async (event: MouseEvent) => {
-      if (event.target instanceof HTMLElement) {
-        const focusedCategory = event.target.id;
-
-        const isInput = event.target instanceof HTMLInputElement;
-
-        if (isInput) {
-          return;
-        }
-
-        if (
-          event.target.classList.contains(
-            `${focusedCategory.replace(/\s/g, "-")}-budget`
-          )
-        ) {
-          setIsEditing(true);
-          setCategoryBeingEdited(focusedCategory);
-          // get this target's id
-          setCategoryEditStatus((prev) => {
-            if (!prev) return prev;
-            return {
-              ...prev,
-              [focusedCategory]: {
-                ...prev[focusedCategory],
-              },
-            };
-          });
-        } else if (isEditing) {
-          const currCategory = categoryEditStatus![categoryBeingEdited!];
-
-          const { data, error } = await supabase
-            .from("user_budgets")
-            .update({
-              budget: currCategory.budget,
-              remaining: currCategory.remaining,
-            })
-            .filter("id", "eq", currCategory.id)
-            .select();
-
-          if (error) {
-            console.log(error);
-            return;
-          }
-
-          if (!data) {
-            console.log("No data");
-            setIsEditing(false);
-            setCategoryBeingEdited("");
-            setCategoryEditStatus((prev) => {
-              const foo = { ...prev };
-              Object.keys(foo).forEach((key) => {});
-              return foo;
-            });
-            return;
-          }
-
-          //   call setBudgets to update the table
-          setBudgets((prev) => {
-            if (!prev) return prev;
-            return prev.map((category) => {
-              if (category.name === categoryBeingEdited) {
-                return {
-                  ...category,
-                  user_budgets: [
-                    {
-                      ...category.user_budgets[0],
-                      budget: currCategory.budget,
-                      remaining: currCategory.remaining,
-                    },
-                    {
-                      ...category.user_budgets[1],
-                    },
-                  ],
-                };
-              }
-              return category;
-            });
-          });
-
-          setIsEditing(false);
-          setCategoryBeingEdited("");
-          setCategoryEditStatus((prev) => {
-            const foo = { ...prev };
-            Object.keys(foo).forEach((key) => {});
-            return foo;
-          });
-        }
-      }
+    const clickListener = (event: MouseEvent) => {
+      handleWindowClick(
+        event,
+        supabase,
+        categoryBeingEdited,
+        categoryEditStatus,
+        setBudgets,
+        updateBudget,
+        setCategoryBeingEdited
+      );
     };
-
-    window.addEventListener("click", handleWindowClick);
+    window.addEventListener("click", clickListener);
 
     return () => {
-      window.removeEventListener("click", handleWindowClick);
+      window.removeEventListener("click", clickListener);
     };
-  }, [categoryEditStatus]);
+  }, [categoryBeingEdited, categoryEditStatus]);
 
   return (
     <form>
@@ -247,7 +218,7 @@ export default function BudgetsTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {categories?.map((category, index) => (
+            {budgets?.map((category) => (
               <tr key={category.name}>
                 <td className="w-full max-w-0 py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6">
                   {category.name}
@@ -260,28 +231,16 @@ export default function BudgetsTable() {
                       type="text"
                       value={categoryEditStatus?.[category.name!].budget}
                       onChange={(e) => {
-                        setCategoryEditStatus((prev) => {
-                          if (!prev) return prev;
-                          return {
-                            ...prev,
-                            [category.name!]: {
-                              ...prev[category.name!],
-                              budget: parseInt(e.target.value) || 0,
-                              remaining:
-                                parseInt(e.target.value) -
-                                category.user_budgets[0].current_total,
-                            },
-                          };
-                        });
+                        updateBudget(
+                          category.name!,
+                          parseInt(e.target.value) || 0
+                        );
                       }}
                     />
                   ) : (
-                    // onclick, set isEditing to true
-
                     <span className="inline-flex items-center space-x-3">
                       <p
                         id={category.name}
-                        // convert whitespace of category.name to dash
                         className={`${category.name.replace(
                           /\s/g,
                           "-"
