@@ -32,49 +32,70 @@ export const handleWindowClick = async (
       setCategoryBeingEdited(focusedCategory);
     } else if (categoryBeingEdited?.length) {
       const currCategory = categoryEditStatus![categoryBeingEdited!];
-
-      const { data, error } = await supabase
-        .from("user_budgets")
-        .update({
-          budget: currCategory.budget,
-          remaining: currCategory.remaining,
-        })
-        .filter("id", "eq", currCategory.id)
-        .select();
-
-      if (error) {
-        console.log(error);
-        return;
-      }
-
-      if (data) {
-        //   call setBudgets to update the table
-        setBudgets((prev) => {
-          if (!prev) return prev;
-          return prev.map((category) => {
-            if (category.name === categoryBeingEdited) {
-              return {
-                ...category,
-                user_budgets: [
-                  {
-                    ...category.user_budgets[0],
-                    budget: currCategory.budget,
-                    remaining: currCategory.remaining,
-                  },
-                  {
-                    ...category.user_budgets[1],
-                  },
-                ],
-              };
-            }
-            return category;
-          });
-        });
-
-        updateBudget(categoryBeingEdited!, currCategory.budget);
-      }
-
-      setCategoryBeingEdited("");
+      await persistUpdateBudget(
+        supabase,
+        currCategory,
+        setBudgets,
+        categoryBeingEdited,
+        updateBudget,
+        setCategoryBeingEdited
+      );
     }
   }
+};
+
+export const persistUpdateBudget = async (
+  supabase: SupabaseClient<Database>,
+  currCategory: {
+    budget: number;
+    remaining: number;
+    id: number;
+  },
+  setBudgets: Dispatch<SetStateAction<UserBudgetsCategory[] | undefined>>,
+  categoryBeingEdited: string | undefined,
+  updateBudget: (categoryName: string, budget: number) => void,
+  setCategoryBeingEdited: Dispatch<SetStateAction<string | undefined>>
+) => {
+  const { data, error } = await supabase
+    .from("user_budgets")
+    .update({
+      budget: currCategory.budget,
+      remaining: currCategory.remaining,
+    })
+    .filter("id", "eq", currCategory.id)
+    .select();
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  if (data) {
+    //   call setBudgets to update the table
+    setBudgets((prev) => {
+      if (!prev) return prev;
+      return prev.map((category) => {
+        if (category.name === categoryBeingEdited) {
+          return {
+            ...category,
+            user_budgets: [
+              {
+                ...category.user_budgets[0],
+                budget: currCategory.budget,
+                remaining: currCategory.remaining,
+              },
+              {
+                ...category.user_budgets[1],
+              },
+            ],
+          };
+        }
+        return category;
+      });
+    });
+
+    updateBudget(categoryBeingEdited!, currCategory.budget);
+  }
+
+  setCategoryBeingEdited("");
 };
