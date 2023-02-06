@@ -5,8 +5,9 @@ import { useSessionContext } from "@supabase/auth-helpers-react";
 import { AuthGuard } from "../common/AuthGuard";
 import DropDown from "../common/DropDown";
 import BudgetsTable from "../modules/finances/budgets/components/BudgetsTable";
+import { useState } from "react";
 
-export default function Example({
+export default function Finance({
   session,
   userBanks,
   transactions,
@@ -15,7 +16,12 @@ export default function Example({
   userBanks: any;
   transactions: any;
 }) {
-  const supabaseSession = useSessionContext();
+  const latestDate = new Date();
+  latestDate.setDate(1);
+  latestDate.setMonth(latestDate.getMonth() - 1);
+  const [currentDate, setCurrentDate] = useState(
+    new Date("2023-01-01T00:00:00.000Z")
+  );
 
   return (
     <AuthGuard>
@@ -28,30 +34,45 @@ export default function Example({
                 <div className="py-6 flex items-center justify-between">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center">
-                      <div className="flex-shrink-0">
+                      <button
+                        className="flex-shrink-0 cursor-pointer"
+                        onClick={() => {
+                          const newDate = new Date(currentDate);
+                          newDate.setMonth(newDate.getMonth() - 1);
+                          setCurrentDate(newDate);
+                        }}
+                      >
                         <Image
                           src="/left-carrot.svg"
                           alt="left carrot for previous month"
                           width={40}
                           height={40}
                         />
-                      </div>
-                      <div className="flex-shrink-0">
+                      </button>
+                      <button
+                        className="flex-shrink-0 cursor-pointer disabled:cursor-default disabled:opacity-50"
+                        disabled={currentDate >= latestDate}
+                        onClick={() => {
+                          const newDate = new Date(currentDate);
+                          newDate.setMonth(newDate.getMonth() + 1);
+                          setCurrentDate(newDate);
+                        }}
+                      >
                         <Image
                           src="/right-carrot.svg"
                           alt="right carrot for previous month"
                           width={40}
                           height={40}
                         />
-                      </div>
+                      </button>
                       <div>
                         <div className="flex items-center">
                           <h1 className="ml-3 text-4xl font-bold leading-7 text-slate-900 sm:truncate sm:leading-9">
                             {/* current Month in FullMonth FullYear format */}
-                            {new Date().toLocaleString("default", {
+                            {currentDate.toLocaleString("default", {
                               month: "long",
                             })}{" "}
-                            {new Date().getFullYear()}
+                            {currentDate.getFullYear()}
                           </h1>
                         </div>
                       </div>
@@ -68,7 +89,7 @@ export default function Example({
                   </div>
                 </div>
 
-                <BudgetsTable />
+                <BudgetsTable currentDate={currentDate} />
               </div>
             </div>
           </main>

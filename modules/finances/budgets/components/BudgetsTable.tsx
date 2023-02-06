@@ -22,7 +22,11 @@ export type CategoryEditStatusType = {
   };
 };
 
-export default function BudgetsTable() {
+export default function BudgetsTable({
+  currentDate = new Date(),
+}: {
+  currentDate?: Date;
+}) {
   const supabaseSession = useSessionContext();
   const supabase = useSupabaseClient<Database>();
 
@@ -85,15 +89,18 @@ export default function BudgetsTable() {
   useEffect(() => {
     const getUserBudgets = async () => {
       const firstDayOfLastMonth = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() - 1,
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 1,
         1
       );
       const firstDayofThisMonth = new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
         1
       );
+
+      // console.log(firstDayOfLastMonth.toDateString());
+      // console.log(firstDayofThisMonth.toDateString());
 
       const { data, error } = await supabase
         .from("user_categories")
@@ -136,12 +143,23 @@ export default function BudgetsTable() {
       setBudgets(finalData);
 
       const finalCategoryBeingEdited: CategoryEditStatusType = {};
+
+      if (finalData.length === 0) {
+        return;
+      }
+
       finalData.forEach((category) => {
         finalCategoryBeingEdited[category.name!] = {
-          budget: category.user_budgets[0].budget,
-          currentTotal: category.user_budgets[0].current_total,
-          remaining: category.user_budgets[0].remaining,
-          id: category.user_budgets[0].id,
+          budget: category.user_budgets.length
+            ? category.user_budgets[0].budget
+            : 0,
+          currentTotal: category.user_budgets.length
+            ? category.user_budgets[0].current_total
+            : 0,
+          remaining: category.user_budgets.length
+            ? category.user_budgets[0].remaining
+            : 0,
+          id: category.user_budgets.length ? category.user_budgets[0].id : -1,
         };
       });
 
@@ -149,7 +167,7 @@ export default function BudgetsTable() {
     };
 
     getUserBudgets();
-  }, [supabaseSession, supabase]);
+  }, [supabaseSession, supabase, currentDate]);
 
   useEffect(() => {
     const clickListener = (event: MouseEvent) => {
