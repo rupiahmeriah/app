@@ -1,9 +1,33 @@
 import { BanknotesIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import { SlideOvers } from "../../../../common/SlideOvers";
+import { UserTransactionType } from "../../../../types/highLevelTypes";
 import { classNames } from "../../../../utils/classNames";
+import EditTransaction from "./EditTransaction";
 
-export const Transactions = ({ transactions }: any) => {
+export const Transactions = ({
+  transactions = [],
+}: {
+  transactions: UserTransactionType[] | undefined;
+}) => {
+  const [toggleSlideOver, setToggleSlideOver] = useState(false);
+
   return (
     <div>
+      {
+        // Slide over
+        toggleSlideOver && (
+          <div className="absolute inset-0 overflow-hidden">
+            <SlideOvers
+              title={"Edit Transaction"}
+              open={toggleSlideOver}
+              setOpen={setToggleSlideOver}
+            >
+              <EditTransaction />
+            </SlideOvers>
+          </div>
+        )
+      }
       <div>
         <h3 className="mx-auto mt-4 max-w-6xl px-4 text-md font-medium leading-6 text-slate-600 sm:px-6 lg:px-8">
           Total Expenses
@@ -81,6 +105,18 @@ export const Transactions = ({ transactions }: any) => {
                 <thead>
                   <tr>
                     <th
+                      className="bg-slate-50 px-6 py-3 text-right text-sm font-semibold text-slate-900"
+                      scope="col"
+                    >
+                      Date
+                    </th>
+                    <th
+                      className="bg-slate-50 px-6 py-3 text-right text-sm font-semibold text-slate-900"
+                      scope="col"
+                    >
+                      Category
+                    </th>
+                    <th
                       className="bg-slate-50 px-6 py-3 text-left text-sm font-semibold text-slate-900"
                       scope="col"
                     >
@@ -102,19 +138,32 @@ export const Transactions = ({ transactions }: any) => {
                       className="bg-slate-50 px-6 py-3 text-right text-sm font-semibold text-slate-900"
                       scope="col"
                     >
-                      Date
+                      Account
+                    </th>
+                    <th
+                      className="bg-slate-50 px-6 py-3 text-right text-sm font-semibold text-slate-900"
+                      scope="col"
+                    >
+                      Edit
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200 bg-white">
-                  {transactions.slice(0, 10).map((transaction: any) => (
+                  {transactions.slice(0, 100).map((transaction) => (
                     <tr key={transaction.id} className="bg-white">
+                      <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-slate-500">
+                        <time dateTime={transaction.date}>
+                          {transaction.date}
+                        </time>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-center text-sm text-slate-500">
+                        {transaction.user_categories
+                          ? transaction.user_categories.name
+                          : "-"}
+                      </td>
                       <td className="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-slate-900">
                         <div className="flex">
-                          <a
-                            href={transaction.href}
-                            className="group inline-flex space-x-2 truncate text-sm"
-                          >
+                          <a className="group inline-flex space-x-2 truncate text-sm">
                             <BanknotesIcon
                               className="h-5 w-5 flex-shrink-0 text-slate-400 group-hover:text-slate-500"
                               aria-hidden="true"
@@ -142,9 +191,17 @@ export const Transactions = ({ transactions }: any) => {
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-6 py-4 text-right text-sm text-slate-500">
-                        <time dateTime={transaction.date}>
-                          {transaction.date}
-                        </time>
+                        {transaction.user_bank_id?.bank_id?.name}
+                      </td>
+                      <td className=" bg-slate-100 whitespace-nowrap  text-right text-sm text-slate-500">
+                        <button
+                          className="px-6 py-4 text-slate-400 hover:text-slate-500 text-lg"
+                          onClick={() => {
+                            setToggleSlideOver(true);
+                          }}
+                        >
+                          {`>`}
+                        </button>
                       </td>
                     </tr>
                   ))}

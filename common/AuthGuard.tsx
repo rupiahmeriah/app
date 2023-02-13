@@ -1,10 +1,5 @@
-import {
-  useSession,
-  useSupabaseClient,
-  useUser,
-} from "@supabase/auth-helpers-react";
+import { useSession, useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Auth, ThemeSupa } from "@supabase/auth-ui-react";
-import App from "next/app";
 import { Database } from "../types/supabase";
 
 interface MyComponentProps {
