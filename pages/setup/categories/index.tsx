@@ -2,7 +2,7 @@ import { Session } from "@supabase/auth-helpers-react";
 import { useSessionContext } from "@supabase/auth-helpers-react";
 import { AuthGuard } from "../../../common/AuthGuard";
 import CategoriesTable from "../../../modules/setup/categories/components/CategoriesTable";
-import { TabsLayout } from "../TabsLayout";
+import { TabsLayout } from "../../../modules/setup/TabsLayout";
 
 export default function Example({
   session,

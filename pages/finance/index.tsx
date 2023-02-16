@@ -6,7 +6,7 @@ import { AuthGuard } from "../../common/AuthGuard";
 import DropDown from "../../common/DropDown";
 import BudgetsTable from "../../modules/finances/budgets/components/BudgetsTable";
 import PeriodTitle from "../../modules/finances/PeriodTitle";
-import { TabsLayout } from "./TabsLayout";
+import { TabsLayout } from "../../modules/finances/TabsLayout";
 
 export default function Finance({
   session,

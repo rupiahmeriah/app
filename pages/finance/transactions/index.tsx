@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Transactions } from "../../../modules/finances/transactions/components/Transactions";
 import PeriodTitle from "../../../modules/finances/PeriodTitle";
 import { AuthGuard } from "../../../common/AuthGuard";
-import { TabsLayout } from "../TabsLayout";
+import { TabsLayout } from "../../../modules/finances/TabsLayout";
 import {
   useSessionContext,
   useSupabaseClient,

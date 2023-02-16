@@ -9,7 +9,7 @@ import { UserBankDetailType } from "../../types/highLevelTypes";
 import { supabase as supabaseClient } from "../../utils/supabaseClient";
 import { BankSetupSettings } from "../../modules/setup/accounts/components/BankSetupSettings";
 import { NextPageWithLayout } from "../_app";
-import { TabsLayout } from "./TabsLayout";
+import { TabsLayout } from "../../modules/setup/TabsLayout";
 import { AuthGuard } from "../../common/AuthGuard";
 
 export async function getServerSideProps() {
