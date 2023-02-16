@@ -123,23 +123,18 @@ export default async function handler(
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "supabaseAnonKeyEnvNotSet";
 
-  console.log("token", token);
-
-  const response = await fetch(
-    `${supabaseUrl}/functions/v1/populateBankConnection`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${supabaseAnonKey}`,
-      },
-      body: JSON.stringify({
-        token: generateTokenResponseJson.data.token,
-        req_id: reqData.req_id,
-        consumer_id: reqData.consumer_id,
-        account_number: reqData.account_number,
-      }),
-    }
-  );
+  const response = await fetch(`${supabaseUrl}/populateBankConnection`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${supabaseAnonKey}`,
+    },
+    body: JSON.stringify({
+      token,
+      req_id: reqData.req_id,
+      consumer_id: reqData.consumer_id,
+      account_number: reqData.account_number,
+    }),
+  });
 
   const body = (await response.json()) as any;
 
