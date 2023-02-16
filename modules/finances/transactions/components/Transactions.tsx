@@ -11,6 +11,9 @@ export const Transactions = ({
   transactions: UserTransactionType[] | undefined;
 }) => {
   const [toggleSlideOver, setToggleSlideOver] = useState(false);
+  const [focusedTransaction, setFocusedTransaction] = useState<
+    UserTransactionType | undefined
+  >();
 
   return (
     <div>
@@ -23,7 +26,7 @@ export const Transactions = ({
               open={toggleSlideOver}
               setOpen={setToggleSlideOver}
             >
-              <EditTransaction />
+              <EditTransaction focusedTransaction={focusedTransaction} />
             </SlideOvers>
           </div>
         )
@@ -198,6 +201,7 @@ export const Transactions = ({
                           className="px-6 py-4 text-slate-400 hover:text-slate-500 text-lg"
                           onClick={() => {
                             setToggleSlideOver(true);
+                            setFocusedTransaction(transaction);
                           }}
                         >
                           {`>`}

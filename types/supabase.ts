@@ -9,48 +9,30 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      institutions: {
+      errors: {
         Row: {
-          automatic_verification: boolean | null
-          bank_code: string | null
-          country_code: string | null
-          country_name: string | null
           created_at: string | null
+          description: string | null
+          error_message: string | null
           id: number
-          institution_type: string | null
-          logo: string | null
-          name: string | null
-          passbook_verification: boolean | null
-          pdf_verification: boolean | null
-          primary_color: string | null
+          source: string | null
+          user_id: string | null
         }
         Insert: {
-          automatic_verification?: boolean | null
-          bank_code?: string | null
-          country_code?: string | null
-          country_name?: string | null
           created_at?: string | null
+          description?: string | null
+          error_message?: string | null
           id?: number
-          institution_type?: string | null
-          logo?: string | null
-          name?: string | null
-          passbook_verification?: boolean | null
-          pdf_verification?: boolean | null
-          primary_color?: string | null
+          source?: string | null
+          user_id?: string | null
         }
         Update: {
-          automatic_verification?: boolean | null
-          bank_code?: string | null
-          country_code?: string | null
-          country_name?: string | null
           created_at?: string | null
+          description?: string | null
+          error_message?: string | null
           id?: number
-          institution_type?: string | null
-          logo?: string | null
-          name?: string | null
-          passbook_verification?: boolean | null
-          pdf_verification?: boolean | null
-          primary_color?: string | null
+          source?: string | null
+          user_id?: string | null
         }
       }
       profiles: {
@@ -86,7 +68,6 @@ export interface Database {
           account_number: string | null
           balances_available: number
           balances_current: number
-          bank_id: number | null
           created_at: string | null
           id: string
           institution_type: number | null
@@ -99,7 +80,6 @@ export interface Database {
           account_number?: string | null
           balances_available: number
           balances_current: number
-          bank_id?: number | null
           created_at?: string | null
           id: string
           institution_type?: number | null
@@ -112,34 +92,10 @@ export interface Database {
           account_number?: string | null
           balances_available?: number
           balances_current?: number
-          bank_id?: number | null
           created_at?: string | null
           id?: string
           institution_type?: number | null
           updated_at?: string | null
-          user_id?: string
-        }
-      }
-      user_bank_tokens: {
-        Row: {
-          access_token: string
-          bank_id: number
-          created_at: string | null
-          id: string
-          user_id: string
-        }
-        Insert: {
-          access_token: string
-          bank_id: number
-          created_at?: string | null
-          id: string
-          user_id: string
-        }
-        Update: {
-          access_token?: string
-          bank_id?: number
-          created_at?: string | null
-          id?: string
           user_id?: string
         }
       }
@@ -156,7 +112,6 @@ export interface Database {
           recurring_id: number | null
           reference_id: string | null
           status: string
-          user_bank_id: string
           user_id: string
         }
         Insert: {
@@ -171,7 +126,6 @@ export interface Database {
           recurring_id?: number | null
           reference_id?: string | null
           status: string
-          user_bank_id: string
           user_id: string
         }
         Update: {
@@ -186,7 +140,6 @@ export interface Database {
           recurring_id?: number | null
           reference_id?: string | null
           status?: string
-          user_bank_id?: string
           user_id?: string
         }
       }
@@ -254,6 +207,23 @@ export interface Database {
           name?: string | null
           projected_spending?: number | null
           treat_as_income?: boolean | null
+          user_id?: string
+        }
+      }
+      user_finantier_info: {
+        Row: {
+          consumer_id: string | null
+          created_at: string | null
+          user_id: string
+        }
+        Insert: {
+          consumer_id?: string | null
+          created_at?: string | null
+          user_id: string
+        }
+        Update: {
+          consumer_id?: string | null
+          created_at?: string | null
           user_id?: string
         }
       }

@@ -3,9 +3,14 @@ import {
   useSupabaseClient,
 } from "@supabase/auth-helpers-react";
 import { useState, useEffect } from "react";
+import { UserTransactionType } from "../../../../types/highLevelTypes";
 import { Database } from "../../../../types/supabase";
 
-export default function Example() {
+export default function Example({
+  focusedTransaction,
+}: {
+  focusedTransaction: UserTransactionType | undefined;
+}) {
   const supabaseSession = useSessionContext();
   const supabase = useSupabaseClient<Database>();
 
